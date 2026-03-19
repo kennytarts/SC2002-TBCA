@@ -45,14 +45,9 @@ public abstract class Entity {
         this.name = name;
     }
 
-    public int takeDamage(int damage) {
-        hp -= damage;
-        return hp;
-    }
-
     public int basicAttack(Entity e) {
         int damage = Math.max(0, this.attack - e.getDef());
-        takeDamage(damage);
+        e.setHp(e.getHp()-damage);
         return damage;
     }
 
