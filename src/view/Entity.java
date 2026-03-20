@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public abstract class Entity {
     private int hp;
     private int attack;
@@ -56,13 +58,23 @@ public abstract class Entity {
 
     public int basicAttack(Entity e) {
         int damage = Math.max(0, this.attack - e.getDef());
-        e.setHp(e.getHp()-damage);
+        if (damage > e.getHp()) {
+            e.setHp(0);
+        }
+        else{
+            e.setHp(e.getHp()-damage);
+        }
+        
         return damage;
     }
 
     public void getStunned() {
         status.setStatus(1);
         status.setDuration(2);
+    }
+
+    public void viewAttr() {
+        System.out.println(name+'\n'+"HP: "+hp+'\n'+"Attack: "+attack+'\n'+"Defense: "+defense+'\n'+"Speed: "+speed+'\n'+"Status: "+status.getStatus()+'\n');
     }
 
 }
