@@ -15,9 +15,9 @@ public class Wizard extends Player {
         for (Entity enemy: e) {
             basicAttack(enemy);
 
-            // +10hp for each my killed
+            // +10 attack for each my killed
             if (enemy.getHp() == 0) {
-                setHp(getHp()+10);
+                setAtk(getAtk()+10);
             }
         }
          
