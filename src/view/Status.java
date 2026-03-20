@@ -1,21 +1,26 @@
 public class Status {
-    private int duration = 0;
-    private int status = 0; // 0 for normal, 1 for stun
+    private int duration = StatusEffects.NONE.getDuration();
+    private StatusEffects status = StatusEffects.NONE;
 
-    public int getStatus() {
+    public StatusEffects getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(StatusEffects status) {
         this.status = status;
+        duration = status.getDuration();
     }
 
     public int getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void decrementDuration() {
+        if (duration > 0) {
+            duration--;
+        }
+        if (duration == 0) {
+            status = StatusEffects.NONE;
+        }
     }
-
 }
