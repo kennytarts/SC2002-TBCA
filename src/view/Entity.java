@@ -4,6 +4,7 @@ public abstract class Entity {
     private int defense;
     private int speed;
     private String name;
+    private Status status = new Status();
 
     public int getHp() {
         return hp;
@@ -45,10 +46,23 @@ public abstract class Entity {
         this.name = name;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public int basicAttack(Entity e) {
         int damage = Math.max(0, this.attack - e.getDef());
         e.setHp(e.getHp()-damage);
         return damage;
+    }
+
+    public void getStunned() {
+        status.setStatus(1);
+        status.setDuration(2);
     }
 
 }

@@ -11,7 +11,7 @@ public class Wizard extends Player {
 
     // Arcane Blast
     //TODO cooldown 3 turns
-    public void SpecialSkill(ArrayList<Entity> e) {
+    public void specialSkill(ArrayList<Entity> e) {
         for (Entity enemy: e) {
             basicAttack(enemy);
 
