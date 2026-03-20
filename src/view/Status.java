@@ -14,4 +14,13 @@ public class Status {
     public int getDuration() {
         return duration;
     }
+
+    public void decrementDuration() {
+        if (duration > 0) {
+            duration--;
+        }
+        if (duration == 0) {
+            status = StatusEffects.NONE;
+        }
+    }
 }

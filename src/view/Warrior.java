@@ -16,7 +16,7 @@ public class Warrior extends Player {
             basicAttack(enemy);
 
             //TODO implement stunt on enemy
-            enemy.getStunned();
+            enemy.setStatus(StatusEffects.STUN);
         }
     }
 

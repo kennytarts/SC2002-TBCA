@@ -8,6 +8,7 @@ public abstract class Player extends Entity implements ISpecialSkill{
     // TODO set for 2 rounds only
     public void defend() {
         setDef(getDef() + 10);
+        setStatus(StatusEffects.DEFEND);
     }
 
 }

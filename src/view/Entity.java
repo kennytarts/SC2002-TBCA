@@ -68,11 +68,6 @@ public abstract class Entity {
         return damage;
     }
 
-    public void getStunned() {
-        status.setStatus(1);
-        status.setDuration(2);
-    }
-
     public void viewAttr() {
         System.out.println(name+'\n'+"HP: "+hp+'\n'+"Attack: "+attack+'\n'+"Defense: "+defense+'\n'+"Speed: "+speed+'\n'+"Status: "+status.getStatus()+'\n');
     }
