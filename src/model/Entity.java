@@ -1,12 +1,10 @@
-import java.util.HashMap;
-
 public abstract class Entity {
     private int hp;
     private int attack;
     private int defense;
     private int speed;
     private String name;
-    private Status status = new Status();
+    private Status status = new Status(StatusEffects.NONE);
 
     public int getHp() {
         return hp;

@@ -1,4 +1,4 @@
-public enums StatusEffects {
+public enum StatusEffects {
     NONE(0),
     STUN(2),
     DEFEND(2),
