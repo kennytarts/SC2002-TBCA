@@ -1,5 +1,5 @@
 import java.util.ArrayList;
 
 public interface ISpecialSkill {
-    public abstract void SpecialSkill(ArrayList<Entity> e);
+    public abstract void specialSkill(ArrayList<Entity> e);
 }
