@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Warrior extends Player {
     public Warrior() {
-        setCurrentHP(260);
+        setHp(260);
         setMaxHP(260);
         setAtk(40);
         setDef(20);
