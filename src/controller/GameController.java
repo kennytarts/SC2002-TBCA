@@ -47,26 +47,26 @@ public class GameController {
 
         switch (level) {
             case 1:
-                mainEnemies.add(new Goblin());
-                mainEnemies.add(new Goblin());
-                mainEnemies.add(new Goblin());
+                mainEnemies.add(new Goblin("Goblin A"));
+                mainEnemies.add(new Goblin("Goblin B"));
+                mainEnemies.add(new Goblin("Goblin C"));
                 break;
 
             case 2:
-                mainEnemies.add(new Goblin());
-                mainEnemies.add(new Wolf());
+                mainEnemies.add(new Goblin("Goblin"));
+                mainEnemies.add(new Wolf("Wolf"));
 
-                backupEnemies.add(new Wolf());
-                backupEnemies.add(new Wolf());
+                backupEnemies.add(new Wolf("Wolf A"));
+                backupEnemies.add(new Wolf("Wolf B"));
                 break;
 
             case 3:
-                mainEnemies.add(new Goblin());
-                mainEnemies.add(new Goblin());
+                mainEnemies.add(new Goblin("Goblin A"));
+                mainEnemies.add(new Goblin("Goblin B"));
 
-                backupEnemies.add(new Goblin());
-                backupEnemies.add(new Wolf());
-                backupEnemies.add(new Wolf());
+                backupEnemies.add(new Goblin("Goblin C"));
+                backupEnemies.add(new Wolf("Wolf A"));
+                backupEnemies.add(new Wolf("Wolf B"));
                 break;
 
             default:
