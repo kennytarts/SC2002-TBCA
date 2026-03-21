@@ -25,9 +25,7 @@ public class BattleController {
     private ArrayList<Entity> getTurnOrder() {
         ArrayList<Entity> order = new ArrayList<Entity>();
 
-        if (player != null && player.isAlive()) {
-            order.add(player);
-        }
+        order.add(player);
 
         for (Entity e : currentEnemies) {
             if (e != null && e.isAlive()) {
@@ -35,6 +33,7 @@ public class BattleController {
             }
         }
 
+        // sort by speed descending
         order.sort((a, b) -> Integer.compare(b.getSpd(), a.getSpd()));
         return order;
     }
@@ -60,7 +59,7 @@ public class BattleController {
 
         if (stun.isExpired()) {
             e.removeStatus(StatusEffects.STUN);
-            view.showNoLongerStunned(e);
+            // view.showNoLongerStunned(e);
         }
 
         return true;
@@ -87,7 +86,7 @@ public class BattleController {
     }
 
     private void updateDefendForEntity(Entity e) {
-        if (e == null || !e.isAlive()) {
+        if (!e.isAlive()) {
             return;
         }
 
@@ -145,7 +144,9 @@ public class BattleController {
                     targets.add(target);
                     ((Warrior) player).specialSkill(targets);
                     view.showShieldBash(player, target);
-                } else if (player instanceof Wizard) {
+                } 
+                
+                else if (player instanceof Wizard) {
                     if (!hasAliveEnemies()) {
                         view.showNoValidTargets();
                         return;
@@ -153,7 +154,9 @@ public class BattleController {
 
                     ((Wizard) player).specialSkill(currentEnemies);
                     view.showArcaneBlast(player);
-                } else {
+                } 
+                
+                else {
                     view.showNoSpecialSkill();
                     return;
                 }
@@ -190,11 +193,24 @@ public class BattleController {
         view.showEnemyAttack(enemy, player, damage);
     }
 
+    public boolean enemiesRemaining() {
+        return hasAliveEnemies();
+    }
+
+    public void setEnemies(ArrayList<Entity> enemies) {
+        this.currentEnemies = enemies;
+    }
+
+    public ArrayList<Entity> getEnemies() {
+        return currentEnemies;
+    }
+
     public void executeRound() throws InterruptedException {
         ArrayList<Entity> turnOrder = getTurnOrder();
         ArrayList<Entity> defeatedThisRound = new ArrayList<Entity>();
 
         for (Entity e : turnOrder) {
+            
             if (!e.isAlive()) {
                 continue;
             }
@@ -218,7 +234,9 @@ public class BattleController {
 
             if (e instanceof Player) {
                 playerTurn();
-            } else {
+            } 
+            
+            else {
                 enemyTurn(e);
             }
 
@@ -234,17 +252,5 @@ public class BattleController {
         }
 
         currentEnemies.removeAll(defeatedThisRound);
-    }
-
-    public boolean enemiesRemaining() {
-        return hasAliveEnemies();
-    }
-
-    public void setEnemies(ArrayList<Entity> enemies) {
-        this.currentEnemies = enemies;
-    }
-
-    public ArrayList<Entity> getEnemies() {
-        return currentEnemies;
     }
 }
