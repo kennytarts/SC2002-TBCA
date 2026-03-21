@@ -3,7 +3,9 @@ package controller;
 import java.util.ArrayList;
 
 import model.Entity;
+import model.Item;
 import model.Player;
+import model.PowerStone;
 import model.Status;
 import model.StatusEffects;
 import model.Warrior;
@@ -65,27 +67,15 @@ public class BattleController {
         return true;
     }
 
-    private void updateEndOfTurnStatuses(Entity e) {
-        Status invulnerable = e.getStatus(StatusEffects.INVULNERABLE);
-        if (invulnerable != null) {
-            invulnerable.decrementDuration();
-
-            if (invulnerable.isExpired()) {
-                e.removeStatus(StatusEffects.INVULNERABLE);
-                view.showNoLongerInvulnerable(e);
-            }
-        }
-    }
-
-    public void updateDefendStatusesAtStartOfRound() {
-        updateDefendForEntity(player);
+    public void updateRoundStatusesAtStartOfRound() {
+        updateRoundStatusForEntity(player);
 
         for (Entity enemy : currentEnemies) {
-            updateDefendForEntity(enemy);
+            updateRoundStatusForEntity(enemy);
         }
     }
 
-    private void updateDefendForEntity(Entity e) {
+    private void updateRoundStatusForEntity(Entity e) {
         if (!e.isAlive()) {
             return;
         }
@@ -100,6 +90,16 @@ public class BattleController {
                 view.showDefendWoreOff(e);
             }
         }
+
+        Status invulnerable = e.getStatus(StatusEffects.INVULNERABLE);
+        if (invulnerable != null) {
+            invulnerable.decrementDuration();
+
+            if (invulnerable.isExpired()) {
+                e.removeStatus(StatusEffects.INVULNERABLE);
+                view.showNoLongerInvulnerable(e);
+            }
+        }
     }
 
     private void announceDefeatedEnemies(ArrayList<Entity> defeatedThisRound) {
@@ -108,6 +108,36 @@ public class BattleController {
                 view.showDefeated(enemy);
                 defeatedThisRound.add(enemy);
             }
+        }
+    }
+
+    private void useSpecialSkill() {
+        if (player instanceof Warrior) {
+            Entity target = view.chooseTarget(currentEnemies);
+            if (target == null) {
+                view.showNoValidTargets();
+                return;
+            }
+
+            ArrayList<Entity> targets = new ArrayList<Entity>();
+            targets.add(target);
+            ((Warrior) player).specialSkill(targets);
+            view.showShieldBash(player, target);
+        } 
+        
+        else if (player instanceof Wizard) {
+            if (!hasAliveEnemies()) {
+                view.showNoValidTargets();
+                return;
+            }
+
+            ((Wizard) player).specialSkill(currentEnemies);
+            view.showArcaneBlast(player);
+        } 
+        
+        else {
+            view.showNoSpecialSkill();
+            return;
         }
     }
 
@@ -132,35 +162,7 @@ public class BattleController {
                     view.showSkillCooldown(player);
                     return;
                 }
-
-                if (player instanceof Warrior) {
-                    Entity target = view.chooseTarget(currentEnemies);
-                    if (target == null) {
-                        view.showNoValidTargets();
-                        return;
-                    }
-
-                    ArrayList<Entity> targets = new ArrayList<Entity>();
-                    targets.add(target);
-                    ((Warrior) player).specialSkill(targets);
-                    view.showShieldBash(player, target);
-                } 
-                
-                else if (player instanceof Wizard) {
-                    if (!hasAliveEnemies()) {
-                        view.showNoValidTargets();
-                        return;
-                    }
-
-                    ((Wizard) player).specialSkill(currentEnemies);
-                    view.showArcaneBlast(player);
-                } 
-                
-                else {
-                    view.showNoSpecialSkill();
-                    return;
-                }
-
+                useSpecialSkill();
                 player.startSpecialSkillCooldown();
                 break;
             }
@@ -170,9 +172,33 @@ public class BattleController {
                 view.showDefending(player);
                 break;
 
-            case 4:
-                view.showItemsNotImplemented();
+            case 4: {
+                if (player.getItems().isEmpty()) {
+                    view.showNoItems();
+                    return;
+                }
+
+                int itemIndex = view.chooseItem(player);
+
+                if (itemIndex < 0 || itemIndex >= player.getItems().size()) {
+                    view.showInvalidAction();
+                    return;
+                }
+
+                Item item = player.getItems().get(itemIndex);
+
+                if (item instanceof PowerStone) {
+                    useSpecialSkill();
+                    item.use(player, currentEnemies);
+                }
+                else {
+                    item.use(player, currentEnemies);
+                }
+
+                view.showItemUsed(item.getName());
+                player.removeConsumedItems();
                 break;
+            }
 
             default:
                 view.showInvalidAction();
@@ -226,7 +252,6 @@ public class BattleController {
             }
 
             if (handleStun(e)) {
-                updateEndOfTurnStatuses(e);
                 continue;
             }
 
@@ -245,8 +270,6 @@ public class BattleController {
             if (!player.isAlive() || !hasAliveEnemies()) {
                 break;
             }
-
-            updateEndOfTurnStatuses(e);
 
             Thread.sleep(1000);
         }

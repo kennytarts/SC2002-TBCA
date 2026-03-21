@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import model.Entity;
 import model.Goblin;
 import model.Player;
+import model.Potion;
+import model.PowerStone;
+import model.SmokeBomb;
 import model.Warrior;
 import model.Wizard;
 import model.Wolf;
@@ -100,6 +103,11 @@ public class GameController {
             return;
         }
 
+        player.addItem(new PowerStone());
+        player.addItem(new Potion());
+        player.addItem(new SmokeBomb());
+
+
         BattleView battleView = new BattleView();
         BattleController battleController = new BattleController(player, mainEnemies, battleView);
 
@@ -107,7 +115,7 @@ public class GameController {
             view.showRoundHeader(round);
 
             if (round > 1) {
-                battleController.updateDefendStatusesAtStartOfRound();
+                battleController.updateRoundStatusesAtStartOfRound();
             }
 
             battleController.executeRound();

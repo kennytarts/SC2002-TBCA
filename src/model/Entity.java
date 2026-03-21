@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 public abstract class Entity {
     private int hp;
+	private int maxHP;
     private int attack;
     private int defense;
     private int speed;
     private String name;
     private ArrayList<Status> statuses = new ArrayList<Status>();
+
 
     public int getHp() {
         return hp;
@@ -16,6 +18,14 @@ public abstract class Entity {
 
     public void setHp(int val) {
         hp = val;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public void setMaxHP(int val) {
+        maxHP = val;
     }
 
     public int getAtk() {

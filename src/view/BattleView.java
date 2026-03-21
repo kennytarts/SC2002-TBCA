@@ -100,11 +100,11 @@ public class BattleView {
                 + player.getSpecialSkillCooldown() + " more round(s).");
     }
 
-    public void showShieldBash(Player player, Entity target) {
+    public void showShieldBash(Entity player, Entity target) {
         System.out.println(player.getName() + " used Shield Bash on " + target.getName() + "!");
     }
 
-    public void showArcaneBlast(Player player) {
+    public void showArcaneBlast(Entity player) {
         System.out.println(player.getName() + " used Arcane Blast!");
     }
 
@@ -131,5 +131,25 @@ public class BattleView {
 
     public void showEnemyAttack(Entity enemy, Player player, int damage) {
         System.out.println(enemy.getName() + " dealt " + damage + " damage to " + player.getName() + "!");
+    }
+
+    public void showItems(Player player) {
+        System.out.println("Choose an item:");
+        for (int i = 0; i < player.getItems().size(); i++) {
+            System.out.println((i + 1) + ". " + player.getItems().get(i).getName());
+        }
+    }
+
+    public int chooseItem(Player player) {
+        showItems(player);
+        return scanner.nextInt() - 1;
+    }
+
+    public void showItemUsed(String itemName) {
+        System.out.println(itemName + " used!");
+    }
+
+    public void showNoItems() {
+        System.out.println("No items available.");
     }
 }
