@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 public class Wizard extends Player {
     public Wizard() {
-        setHp(200);
+        setCurrentHP(200);
+        setMaxHP(200);
         setAtk(50);
         setDef(10);
         setSpd(20);
