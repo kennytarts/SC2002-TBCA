@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 public class Warrior extends Player {
@@ -9,16 +11,17 @@ public class Warrior extends Player {
         setName("Warrior");
     }
 
-    // Shield Bash
-    //TODO cooldown 3 turns
-    public void specialSkill(ArrayList<Entity> e) {
-        for (Entity enemy: e) {
+    public void specialSkill(ArrayList<Entity> enemies) {
+        for (Entity enemy : enemies) {
+            if (!enemy.isAlive()) {
+                continue;
+            }
+
             basicAttack(enemy);
 
-            //TODO implement stunt on enemy
-            enemy.setStatus(Status.stun());
+            if (enemy.isAlive()) {
+                enemy.addStatus(Status.stun());
+            }
         }
     }
-
-
 }

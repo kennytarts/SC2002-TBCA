@@ -1,3 +1,5 @@
+package model;
+
 public class Wolf extends Enemy {
 
     public Wolf() {

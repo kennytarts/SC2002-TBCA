@@ -1,3 +1,5 @@
+package model;
+
 public class Goblin extends Enemy {
     
     public Goblin() {

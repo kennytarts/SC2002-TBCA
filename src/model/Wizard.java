@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 public class Wizard extends Player {
@@ -9,17 +11,17 @@ public class Wizard extends Player {
         setName("Wizard");
     }
 
-    // Arcane Blast
-    //TODO cooldown 3 turns
-    public void specialSkill(ArrayList<Entity> e) {
-        for (Entity enemy: e) {
+    public void specialSkill(ArrayList<Entity> enemies) {
+        for (Entity enemy : enemies) {
+            if (!enemy.isAlive()) {
+                continue;
+            }
+
             basicAttack(enemy);
 
-            // +10 attack for each my killed
-            if (enemy.getHp() == 0) {
-                setAtk(getAtk()+10);
+            if (!enemy.isAlive()) {
+                setAtk(getAtk() + 10);
             }
         }
-         
     }
 }

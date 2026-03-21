@@ -1,19 +1,16 @@
+package model;
+
 public class Status {
-    private int duration = StatusEffects.NONE.getDuration();
-    private StatusEffects status = StatusEffects.NONE;
+    private StatusEffects effect;
+    private int duration;
 
-    public Status(StatusEffects status) {
-        this.status = status;
-        this.duration = status.getDuration();
+    public Status(StatusEffects effect) {
+        this.effect = effect;
+        this.duration = effect.getDuration();
     }
 
-    public StatusEffects getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusEffects status) {
-        this.status = status;
-        duration = status.getDuration();
+    public StatusEffects getEffect() {
+        return effect;
     }
 
     public int getDuration() {
@@ -24,9 +21,14 @@ public class Status {
         if (duration > 0) {
             duration--;
         }
-        if (duration == 0) {
-            status = StatusEffects.NONE;
-        }
+    }
+
+    public boolean isExpired() {
+        return duration <= 0;
+    }
+
+    public void refresh() {
+        this.duration = effect.getDuration();
     }
 
     public static Status stun() {
@@ -35,5 +37,9 @@ public class Status {
 
     public static Status defend() {
         return new Status(StatusEffects.DEFEND);
+    }
+
+    public static Status invulnerable() {
+        return new Status(StatusEffects.INVULNERABLE);
     }
 }
