@@ -115,7 +115,7 @@ public class GameController {
             view.showRoundHeader(round);
 
             if (round > 1) {
-                battleController.updateRoundStatusesAtStartOfRound();
+                battleController.updateRoundStatuses();
             }
 
             battleController.executeRound();

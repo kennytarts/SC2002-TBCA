@@ -10,7 +10,6 @@ public class SmokeBomb extends Item {
 
   // TODO: Add Enemy Param
   public void use(Entity user, ArrayList<Entity> enemies) {
-    // TODO: Set duration either controller or another variable
       user.addStatus(Status.invulnerable());
       consumed();
   }

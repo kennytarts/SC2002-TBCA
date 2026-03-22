@@ -18,7 +18,7 @@ public class BattleView {
     }
 
     public void showNoLongerStunned(Entity e) {
-        System.out.println(e.getName() + " is no longer stunned!");
+        System.out.println(e.getName() + " is no longer stunned next turn!");
     }
 
     public void showStunned(Entity e) {
@@ -26,11 +26,11 @@ public class BattleView {
     }
 
     public void showNoLongerInvulnerable(Entity e) {
-        System.out.println(e.getName() + " is no longer invulnerable!");
+        System.out.println(e.getName() + " smoke bomb effect wore off and is no longer invulnerable!");
     }
 
     public void showDefendWoreOff(Entity e) {
-        System.out.println(e.getName() + "'s defend wore off!");
+        System.out.println(e.getName() + " stopped defending!");
     }
 
     public void showDefeated(Entity e) {
