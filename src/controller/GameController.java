@@ -11,20 +11,27 @@ import model.SmokeBomb;
 import model.Warrior;
 import model.Wizard;
 import model.Wolf;
-import view.BattleView;
-import view.GameView;
+import model.Battle;
+import engine.BattleEngine;
+import engine.strategy.SpeedTurnOrderStrategy;
+import view.GameCLI;
 
+/**
+ * GameController: Game-level orchestrator.
+ * Responsible for: Setting up game, managing levels, deciding when battles
+ * occur
+ * NOT responsible for: Battle execution (that's BattleEngine)
+ */
 public class GameController {
     private Player player;
     private ArrayList<Entity> mainEnemies;
     private ArrayList<Entity> backupEnemies;
-    private int round = 1;
-    private GameView view;
+    private GameCLI cli;
 
     public GameController() {
         this.mainEnemies = new ArrayList<Entity>();
         this.backupEnemies = new ArrayList<Entity>();
-        this.view = new GameView();
+        this.cli = new GameCLI();
     }
 
     public boolean selectPlayer(int selection) {
@@ -55,7 +62,6 @@ public class GameController {
             case 2:
                 mainEnemies.add(new Goblin("Goblin"));
                 mainEnemies.add(new Wolf("Wolf"));
-
                 backupEnemies.add(new Wolf("Wolf A"));
                 backupEnemies.add(new Wolf("Wolf B"));
                 break;
@@ -63,7 +69,6 @@ public class GameController {
             case 3:
                 mainEnemies.add(new Goblin("Goblin A"));
                 mainEnemies.add(new Goblin("Goblin B"));
-
                 backupEnemies.add(new Goblin("Goblin C"));
                 backupEnemies.add(new Wolf("Wolf A"));
                 backupEnemies.add(new Wolf("Wolf B"));
@@ -80,10 +85,6 @@ public class GameController {
         return player;
     }
 
-    public int getRound() {
-        return round;
-    }
-
     public ArrayList<Entity> getMainEnemies() {
         return mainEnemies;
     }
@@ -92,46 +93,61 @@ public class GameController {
         return backupEnemies;
     }
 
-    public void run(int playerSelection, int level) throws InterruptedException {
+    public void run(int playerSelection, int levelSelection) throws InterruptedException {
+        // Validate player selection
         if (!selectPlayer(playerSelection)) {
-            view.showInvalidPlayerSelection();
+            cli.showInvalidPlayerSelection();
             return;
         }
 
-        if (!selectLevel(level)) {
-            view.showInvalidLevelSelection();
+        // Validate level selection
+        if (!selectLevel(levelSelection)) {
+            cli.showInvalidLevelSelection();
             return;
         }
 
+        // Give player starting items
         player.addItem(new PowerStone());
         player.addItem(new Potion());
         player.addItem(new SmokeBomb());
 
+        // Create battle and engine
+        Battle battle = new Battle(player, mainEnemies);
+        BattleEngine battleEngine = new BattleEngine(
+                battle,
+                new SpeedTurnOrderStrategy(),
+                cli);
 
-        BattleView battleView = new BattleView();
-        BattleController battleController = new BattleController(player, mainEnemies, battleView);
+        int round = 1;
 
+        // Main game loop
         while (player.isAlive()) {
-            view.showRoundHeader(round);
+            cli.showRoundHeader(round);
 
+            // Update status durations at start of round (except first round)
             if (round > 1) {
-                battleController.updateRoundStatusesAtStartOfRound();
+                battleEngine.updateRoundStatusEffects();
             }
 
-            battleController.executeRound();
+            // Execute round combat
+            battleEngine.executeRound();
 
+            // Check if player died
             if (!player.isAlive()) {
-                view.showDefeat(player);
+                cli.showDefeat(player);
                 break;
             }
 
-            if (!battleController.enemiesRemaining()) {
+            // Check if all enemies defeated
+            if (!battle.hasAliveEnemies()) {
+                // Check if there are backup enemies to bring in
                 if (!backupEnemies.isEmpty()) {
-                    view.showBackupEnemiesArrived();
-                    battleController.setEnemies(new ArrayList<Entity>(backupEnemies));
+                    cli.showBackupEnemiesArrived();
+                    battle.setEnemies(new ArrayList<Entity>(backupEnemies));
                     backupEnemies.clear();
                 } else {
-                    view.showVictory();
+                    // All enemies defeated, game won!
+                    cli.showVictory();
                     break;
                 }
             }
