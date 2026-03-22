@@ -61,21 +61,21 @@ public class BattleController {
 
         if (stun.isExpired()) {
             e.removeStatus(StatusEffects.STUN);
-            // view.showNoLongerStunned(e);
+            view.showNoLongerStunned(e);
         }
 
         return true;
     }
 
-    public void updateRoundStatusesAtStartOfRound() {
-        updateRoundStatusForEntity(player);
+    public void updateRoundStatuses() {
+        updateEntityStatus(player);
 
         for (Entity enemy : currentEnemies) {
-            updateRoundStatusForEntity(enemy);
+            updateEntityStatus(enemy);
         }
     }
 
-    private void updateRoundStatusForEntity(Entity e) {
+    private void updateEntityStatus(Entity e) {
         if (!e.isAlive()) {
             return;
         }
@@ -102,7 +102,7 @@ public class BattleController {
         }
     }
 
-    private void announceDefeatedEnemies(ArrayList<Entity> defeatedThisRound) {
+    private void showDefeatedEnemies(ArrayList<Entity> defeatedThisRound) {
         for (Entity enemy : currentEnemies) {
             if (!enemy.isAlive() && !defeatedThisRound.contains(enemy)) {
                 view.showDefeated(enemy);
@@ -251,11 +251,11 @@ public class BattleController {
                 player.reduceSpecialSkillCooldown();
             }
 
+            view.showEntityAttributes(e);
+
             if (handleStun(e)) {
                 continue;
             }
-
-            view.showEntityAttributes(e);
 
             if (e instanceof Player) {
                 playerTurn();
@@ -265,13 +265,13 @@ public class BattleController {
                 enemyTurn(e);
             }
 
-            announceDefeatedEnemies(defeatedThisRound);
+            showDefeatedEnemies(defeatedThisRound);
 
             if (!player.isAlive() || !hasAliveEnemies()) {
                 break;
             }
 
-            Thread.sleep(1000);
+            Thread.sleep(1500);
         }
 
         currentEnemies.removeAll(defeatedThisRound);
