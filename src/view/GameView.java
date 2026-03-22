@@ -2,6 +2,11 @@ package view;
 
 import model.Player;
 
+/**
+ * @deprecated Use {@link GameCLI} instead. This class has been consolidated
+ *             into GameCLI as part of architecture refactoring.
+ */
+@Deprecated
 public class GameView {
 
     public void showInvalidPlayerSelection() {

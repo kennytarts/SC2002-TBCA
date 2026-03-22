@@ -6,6 +6,11 @@ import java.util.Scanner;
 import model.Entity;
 import model.Player;
 
+/**
+ * @deprecated Use {@link GameCLI} instead. This class has been consolidated
+ *             into GameCLI as part of architecture refactoring.
+ */
+@Deprecated
 public class BattleView {
     private Scanner scanner;
 
