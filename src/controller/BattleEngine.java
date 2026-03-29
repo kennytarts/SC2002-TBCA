@@ -18,11 +18,6 @@ import view.BattleView;
 /**
  * BattleEngine: Core battle execution logic.
  * Responsibility: Process rounds, turns, status effects, damage
- * 
- * Does NOT handle:
- * - Game-level flow (GameController handles that)
- * - Multiple rounds across levels (GameController handles that)
- * - Player class selection (GameController handles that)
  */
 public class BattleEngine {
     private Battle battle;

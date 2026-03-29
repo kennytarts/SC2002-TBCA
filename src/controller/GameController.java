@@ -3,6 +3,16 @@ package controller;
 import java.util.ArrayList;
 
 import model.Entity;
+
+/**
+ * GameController: Game-level orchestration and flow management.
+ * 
+ * Responsibility:
+ * - Player selection (Warrior or Wizard)
+ * - Level setup (3 levels with main and backup enemies)
+ * - Main game loop (rounds, wins, losses)
+ * - Backup enemy management
+ */
 import model.Goblin;
 import model.Player;
 import model.Potion;
@@ -31,6 +41,12 @@ public class GameController {
         this.battleView = new BattleView();
     }
 
+    /**
+     * Create player based on selection
+     * 
+     * @param selection 1 for Warrior, 2 for Wizard
+     * @return true if valid selection, false otherwise
+     */
     public boolean selectPlayer(int selection) {
         switch (selection) {
             case 1:
@@ -45,6 +61,12 @@ public class GameController {
         return true;
     }
 
+    /**
+     * Setup main and backup enemies for the selected level
+     * 
+     * @param level 1, 2, or 3
+     * @return true if valid level, false otherwise
+     */
     public boolean selectLevel(int level) {
         mainEnemies.clear();
         backupEnemies.clear();
@@ -96,6 +118,16 @@ public class GameController {
         return backupEnemies;
     }
 
+    /**
+     * Main game loop: orchestrate the complete game using player choice and level
+     * Initializes player items, creates battle engine, executes rounds until
+     * win/loss
+     * Handles backup enemies when main enemies defeated
+     * 
+     * @param playerSelection 1 for Warrior, 2 for Wizard
+     * @param level           1, 2, or 3
+     * @throws InterruptedException if thread is interrupted during delays
+     */
     public void run(int playerSelection, int level) throws InterruptedException {
         if (!selectPlayer(playerSelection)) {
             gameView.showInvalidPlayerSelection();
