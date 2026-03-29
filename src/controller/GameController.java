@@ -13,7 +13,7 @@ import model.Wizard;
 import model.Wolf;
 import model.Battle;
 import controller.strategy.SpeedTurnOrderStrategy;
-import view.GameCLI;
+import view.BattleView;
 import view.GameView;
 
 public class GameController {
@@ -22,13 +22,13 @@ public class GameController {
     private ArrayList<Entity> backupEnemies;
     private int round = 1;
     private GameView gameView;
-    private GameCLI battleView;
+    private BattleView battleView;
 
     public GameController() {
         this.mainEnemies = new ArrayList<Entity>();
         this.backupEnemies = new ArrayList<Entity>();
         this.gameView = new GameView();
-        this.battleView = new GameCLI();
+        this.battleView = new BattleView();
     }
 
     public boolean selectPlayer(int selection) {

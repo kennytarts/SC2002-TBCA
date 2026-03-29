@@ -13,7 +13,7 @@ import model.Warrior;
 import model.Wizard;
 import model.Battle;
 import controller.strategy.TurnOrderStrategy;
-import view.GameCLI;
+import view.BattleView;
 
 /**
  * BattleEngine: Core battle execution logic.
@@ -27,9 +27,9 @@ import view.GameCLI;
 public class BattleEngine {
     private Battle battle;
     private TurnOrderStrategy turnOrderStrategy;
-    private GameCLI view;
+    private BattleView view;
 
-    public BattleEngine(Battle battle, TurnOrderStrategy turnOrderStrategy, GameCLI view) {
+    public BattleEngine(Battle battle, TurnOrderStrategy turnOrderStrategy, BattleView view) {
         this.battle = battle;
         this.turnOrderStrategy = turnOrderStrategy;
         this.view = view;
