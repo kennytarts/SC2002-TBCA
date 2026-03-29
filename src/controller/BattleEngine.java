@@ -1,4 +1,4 @@
-package engine;
+package controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import model.StatusEffects;
 import model.Warrior;
 import model.Wizard;
 import model.Battle;
-import engine.strategy.TurnOrderStrategy;
+import controller.strategy.TurnOrderStrategy;
 import view.GameCLI;
 
 /**

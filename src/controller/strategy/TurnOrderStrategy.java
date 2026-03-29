@@ -1,4 +1,4 @@
-package engine.strategy;
+package controller.strategy;
 
 import java.util.List;
 import model.Entity;

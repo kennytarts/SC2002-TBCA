@@ -6,10 +6,10 @@ import java.util.Scanner;
 import model.Entity;
 import model.Player;
 
-public class BattleView {
+public class GameCLI {
     private Scanner scanner;
 
-    public BattleView() {
+    public GameCLI() {
         this.scanner = new Scanner(System.in);
     }
 
