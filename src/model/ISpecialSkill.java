@@ -3,5 +3,6 @@ package model;
 import java.util.ArrayList;
 
 public interface ISpecialSkill {
-    public abstract void specialSkill(ArrayList<Entity> e);
+    boolean needsSpecialSkillTarget();
+    boolean useSpecialSkill(Entity target, ArrayList<Entity> enemies);
 }

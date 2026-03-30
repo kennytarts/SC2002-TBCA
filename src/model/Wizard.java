@@ -4,32 +4,36 @@ import java.util.ArrayList;
 
 public class Wizard extends Player {
     public Wizard() {
-        setHp(200);
-        setMaxHP(200);
-        setAtk(50);
-        setDef(10);
-        setSpd(20);
-        setName("Wizard");
+        super("Wizard", 200, 50, 10, 20);
     }
 
     @Override
-    public void specialSkill(ArrayList<Entity> enemies) {
+    public String getSpecialSkillName() {
+        return "Arcane Blast";
+    }
+
+    @Override
+    public boolean needsSpecialSkillTarget() {
+        return false;
+    }
+
+    @Override
+    public boolean useSpecialSkill(Entity target, ArrayList<Entity> enemies) {
+        boolean used = false;
+
         for (Entity enemy : enemies) {
             if (!enemy.isAlive()) {
                 continue;
             }
 
+            used = true;
             basicAttack(enemy);
 
             if (!enemy.isAlive()) {
-                setAtk(getAtk() + 10);
+                changeAttack(10);
             }
         }
-    }
 
-    @Override
-    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
-        specialSkill(enemies);
-        return true;
+        return used;
     }
 }

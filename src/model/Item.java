@@ -1,7 +1,7 @@
 package model;
 
 public abstract class Item implements IItem {
-    private String name;
+    private final String name;
     private boolean consumed;
 
     public Item(String name) {
@@ -17,8 +17,7 @@ public abstract class Item implements IItem {
         return consumed;
     }
 
-    protected void consumed() {
-        this.consumed = true;
+    protected void consume() {
+        consumed = true;
     }
-
 }

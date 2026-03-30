@@ -5,14 +5,8 @@ import model.Status;
 import model.StatusEffects;
 import view.BattleView;
 
-/**
- * Handles status effect updates and turn-start status checks.
- */
 public class StatusEffectManager {
 
-    /**
-     * Called at the start of each round.
-     */
     public void updateRoundStatusEffects(Entity entity, BattleView view) {
         if (!entity.isAlive()) {
             return;
@@ -22,10 +16,6 @@ public class StatusEffectManager {
         updateInvulnerable(entity, view);
     }
 
-    /**
-     * Called at the start of an entity's turn.
-     * Returns true if the entity loses its turn.
-     */
     public boolean handleTurnStartStatus(Entity entity, BattleView view) {
         Status stun = entity.getStatus(StatusEffects.STUN);
 
@@ -50,7 +40,7 @@ public class StatusEffectManager {
             defend.decrementDuration();
 
             if (defend.isExpired()) {
-                entity.setDef(entity.getDef() - 10);
+                entity.changeDefense(-10);
                 entity.removeStatus(StatusEffects.DEFEND);
                 view.showDefendWoreOff(entity);
             }

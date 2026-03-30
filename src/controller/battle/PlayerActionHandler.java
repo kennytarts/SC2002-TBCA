@@ -8,11 +8,9 @@ import model.Item;
 import model.Player;
 import model.PowerStone;
 import view.BattleView;
-import model.Wizard;
-import model.Warrior;
 
 public class PlayerActionHandler {
-    private BattleView view;
+    private final BattleView view;
 
     public PlayerActionHandler(BattleView view) {
         this.view = view;
@@ -53,40 +51,46 @@ public class PlayerActionHandler {
         view.showBasicAttack(player, target, damage);
     }
 
-    private ArrayList<Entity> handleSpecialSkillEnemy(Player player, ArrayList<Entity> enemies, BattleView view) {
-        if (player instanceof Warrior) {
-            Entity target = view.chooseTarget(enemies);
-            ArrayList<Entity> targets = new ArrayList<Entity>();
-            targets.add(target);
-            view.showShieldBash(player, target);
-            return targets;
-
+    private Entity chooseSpecialSkillTarget(Player player, ArrayList<Entity> enemies) {
+        if (!player.needsSpecialSkillTarget()) {
+            view.showSpecialSkillUsed(player);
+            return null;
         }
-        else if (player instanceof Wizard) {
-            view.showArcaneBlast(player);
-            return enemies;
+
+        Entity target = view.chooseTarget(enemies);
+
+        if (target == null) {
+            view.showNoValidTargets();
+            return null;
         }
-        return enemies;
 
-    } 
+        view.showSpecialSkillUsedOnTarget(player, target);
+        return target;
+    }
 
-    private void executeSpecialSkill(Player player, Battle battle, boolean cooldown) {
-        if (cooldown && !player.canUseSpecialSkill()) {
+    private boolean executeSpecialSkill(Player player, Battle battle, boolean applyCooldown) {
+        if (applyCooldown && !player.canUseSpecialSkill()) {
             view.showSkillCooldown(player);
-            return;
+            return false;
         }
-        
-        ArrayList<Entity> enemies = handleSpecialSkillEnemy(player, battle.getEnemies(), view);
-        boolean used = player.useSpecialSkill(enemies);
 
-        if (cooldown && used) {
+        ArrayList<Entity> enemies = battle.getEnemies();
+        Entity target = chooseSpecialSkillTarget(player, enemies);
+
+        if (player.needsSpecialSkillTarget() && target == null) {
+            return false;
+        }
+
+        boolean used = player.useSpecialSkill(target, enemies);
+
+        if (applyCooldown && used) {
             player.startSpecialSkillCooldown();
         }
+
+        return used;
     }
 
     private void executeUseItem(Player player, Battle battle) {
-        ArrayList<Entity> enemies = battle.getEnemies();
-
         if (player.getItems().isEmpty()) {
             view.showNoItems();
             return;
@@ -99,14 +103,13 @@ public class PlayerActionHandler {
             return;
         }
 
-        Item item = player.getItems().get(itemIndex);
+        Item item = player.getItem(itemIndex);
 
         if (item instanceof PowerStone) {
-            // boolean used = player.useSpecialSkill(enemies, view);
             executeSpecialSkill(player, battle, false);
         }
 
-        item.use(player, enemies);
+        item.use(player, battle.getEnemies());
         view.showItemUsed(item.getName());
         player.removeConsumedItems();
     }

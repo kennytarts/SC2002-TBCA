@@ -1,19 +1,37 @@
 package view;
 
+import java.util.Scanner;
+
 import model.Player;
 
-/**
- * GameView: Handles game-level UI messages (player selection, level selection,
- * game flow)
- */
 public class GameView {
+    private final Scanner scanner;
+
+    public GameView(Scanner scanner) {
+        this.scanner = scanner;
+    }
+
+    public int choosePlayerSelection() {
+        System.out.println("Choose your character:");
+        System.out.println("1. Warrior");
+        System.out.println("2. Wizard");
+        return scanner.nextInt();
+    }
+
+    public int chooseLevelSelection() {
+        System.out.println("Choose a level:");
+        System.out.println("1. Level 1");
+        System.out.println("2. Level 2");
+        System.out.println("3. Level 3");
+        return scanner.nextInt();
+    }
 
     public void showInvalidPlayerSelection() {
-        System.out.println("Invalid player selection. Please choose 1 (Warrior) or 2 (Wizard).");
+        System.out.println("Invalid player selection.");
     }
 
     public void showInvalidLevelSelection() {
-        System.out.println("Invalid level selection. Please choose 1, 2, or 3.");
+        System.out.println("Invalid level selection.");
     }
 
     public void showRoundHeader(int round) {

@@ -5,11 +5,8 @@ import model.Player;
 import model.StatusEffects;
 import view.BattleView;
 
-/**
- * Handles enemy-side battle actions.
- */
 public class EnemyActionHandler {
-    private BattleView view;
+    private final BattleView view;
 
     public EnemyActionHandler(BattleView view) {
         this.view = view;

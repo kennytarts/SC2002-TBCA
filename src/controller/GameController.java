@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import controller.strategy.SpeedTurnOrderStrategy;
 import model.Battle;
@@ -16,22 +17,20 @@ import model.Wolf;
 import view.BattleView;
 import view.GameView;
 
-/**
- * GameController: Game-level orchestration and flow management.
- */
 public class GameController {
     private Player player;
-    private ArrayList<Entity> mainEnemies;
-    private ArrayList<Entity> backupEnemies;
+    private final ArrayList<Entity> mainEnemies;
+    private final ArrayList<Entity> backupEnemies;
     private int round = 1;
-    private GameView gameView;
-    private BattleView battleView;
+    private final GameView gameView;
+    private final BattleView battleView;
 
     public GameController() {
+        Scanner scanner = new Scanner(System.in);
         this.mainEnemies = new ArrayList<Entity>();
         this.backupEnemies = new ArrayList<Entity>();
-        this.gameView = new GameView();
-        this.battleView = new BattleView();
+        this.gameView = new GameView(scanner);
+        this.battleView = new BattleView(scanner);
     }
 
     public boolean selectPlayer(int selection) {
@@ -58,24 +57,19 @@ public class GameController {
                 mainEnemies.add(new Goblin("Goblin B"));
                 mainEnemies.add(new Goblin("Goblin C"));
                 break;
-
             case 2:
                 mainEnemies.add(new Goblin("Goblin"));
                 mainEnemies.add(new Wolf("Wolf"));
-
                 backupEnemies.add(new Wolf("Wolf A"));
                 backupEnemies.add(new Wolf("Wolf B"));
                 break;
-
             case 3:
                 mainEnemies.add(new Goblin("Goblin A"));
                 mainEnemies.add(new Goblin("Goblin B"));
-
                 backupEnemies.add(new Goblin("Goblin C"));
                 backupEnemies.add(new Wolf("Wolf A"));
                 backupEnemies.add(new Wolf("Wolf B"));
                 break;
-
             default:
                 return false;
         }
@@ -99,7 +93,15 @@ public class GameController {
         return backupEnemies;
     }
 
+    public void run() throws InterruptedException {
+        int playerSelection = gameView.choosePlayerSelection();
+        int levelSelection = gameView.chooseLevelSelection();
+        run(playerSelection, levelSelection);
+    }
+
     public void run(int playerSelection, int level) throws InterruptedException {
+        round = 1;
+
         if (!selectPlayer(playerSelection)) {
             gameView.showInvalidPlayerSelection();
             return;

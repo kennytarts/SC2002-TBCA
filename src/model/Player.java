@@ -3,11 +3,19 @@ package model;
 import java.util.ArrayList;
 
 public abstract class Player extends Entity implements ISpecialSkill {
-    private ArrayList<Item> itemList = new ArrayList<Item>();
+    private final ArrayList<Item> itemList = new ArrayList<Item>();
     private int specialSkillCooldown = 0;
 
+    protected Player(String name, int maxHP, int attack, int defense, int speed) {
+        super(name, maxHP, attack, defense, speed);
+    }
+
     public ArrayList<Item> getItems() {
-        return itemList;
+        return new ArrayList<Item>(itemList);
+    }
+
+    public Item getItem(int index) {
+        return itemList.get(index);
     }
 
     public void addItem(Item item) {
@@ -25,7 +33,7 @@ public abstract class Player extends Entity implements ISpecialSkill {
 
     public void defend() {
         if (!hasStatus(StatusEffects.DEFEND)) {
-            setDef(getDef() + 10);
+            changeDefense(10);
         }
         addStatus(Status.defend());
     }
@@ -48,5 +56,5 @@ public abstract class Player extends Entity implements ISpecialSkill {
         }
     }
 
-    public abstract boolean useSpecialSkill(ArrayList<Entity> enemies);
+    public abstract String getSpecialSkillName();
 }

@@ -4,28 +4,31 @@ import java.util.ArrayList;
 
 public class Warrior extends Player {
     public Warrior() {
-        setHp(260);
-        setMaxHP(260);
-        setAtk(40);
-        setDef(20);
-        setSpd(30);
-        setName("Warrior");
+        super("Warrior", 260, 40, 20, 30);
     }
 
     @Override
-    public void specialSkill(ArrayList<Entity> enemies) {
-        for (Entity enemy : enemies) {
-            basicAttack(enemy);
+    public String getSpecialSkillName() {
+        return "Shield Bash";
+    }
 
-            if (enemy.isAlive()) {
-                enemy.addStatus(Status.stun());
-            }
+    @Override
+    public boolean needsSpecialSkillTarget() {
+        return true;
+    }
+
+    @Override
+    public boolean useSpecialSkill(Entity target, ArrayList<Entity> enemies) {
+        if (target == null || !target.isAlive()) {
+            return false;
         }
-    }
 
-    @Override
-    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
-        specialSkill(enemies);
+        basicAttack(target);
+
+        if (target.isAlive()) {
+            target.addStatus(Status.stun());
+        }
+
         return true;
     }
 }

@@ -2,12 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
-/**
- * Model that holds the current state of a battle.
- * Responsibility: Data storage only - no game logic
- */
 public class Battle {
-    private Player player;
+    private final Player player;
     private ArrayList<Entity> enemies;
     private int roundNumber;
 
@@ -55,6 +51,6 @@ public class Battle {
     }
 
     public void removeDefeatedEnemies() {
-        enemies.removeIf(e -> !e.isAlive());
+        enemies.removeIf(enemy -> !enemy.isAlive());
     }
 }

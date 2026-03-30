@@ -4,60 +4,44 @@ import java.util.ArrayList;
 
 public abstract class Entity {
     private int hp;
-	private int maxHP;
+    private int maxHP;
     private int attack;
     private int defense;
     private int speed;
-    private String name;
+    private final String name;
     private ArrayList<Status> statuses = new ArrayList<Status>();
 
+    protected Entity(String name, int maxHP, int attack, int defense, int speed) {
+        this.name = name;
+        this.hp = maxHP;
+        this.maxHP = maxHP;
+        this.attack = attack;
+        this.defense = defense;
+        this.speed = speed;
+    }
 
     public int getHp() {
         return hp;
-    }
-
-    public void setHp(int val) {
-        hp = val;
     }
 
     public int getMaxHP() {
         return maxHP;
     }
 
-    public void setMaxHP(int val) {
-        maxHP = val;
-    }
-
     public int getAtk() {
         return attack;
-    }
-
-    public void setAtk(int val) {
-        attack = val;
     }
 
     public int getDef() {
         return defense;
     }
 
-    public void setDef(int val) {
-        defense = val;
-    }
-
     public int getSpd() {
         return speed;
     }
 
-    public void setSpd(int val) {
-        speed = val;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String val) {
-        name = val;
     }
 
     public ArrayList<Status> getStatuses() {
@@ -65,8 +49,8 @@ public abstract class Entity {
     }
 
     public boolean hasStatus(StatusEffects effect) {
-        for (Status s : statuses) {
-            if (s.getEffect() == effect) {
+        for (Status status : statuses) {
+            if (status.getEffect() == effect) {
                 return true;
             }
         }
@@ -74,22 +58,23 @@ public abstract class Entity {
     }
 
     public Status getStatus(StatusEffects effect) {
-        for (Status s : statuses) {
-            if (s.getEffect() == effect) {
-                return s;
+        for (Status status : statuses) {
+            if (status.getEffect() == effect) {
+                return status;
             }
         }
         return null;
     }
 
     public void addStatus(Status newStatus) {
-        Status existing = getStatus(newStatus.getEffect());
+        Status existingStatus = getStatus(newStatus.getEffect());
 
-        if (existing != null) {
-            existing.refresh();
-        } else {
-            statuses.add(newStatus);
+        if (existingStatus != null) {
+            existingStatus.refresh();
+            return;
         }
+
+        statuses.add(newStatus);
     }
 
     public void removeStatus(StatusEffects effect) {
@@ -101,37 +86,30 @@ public abstract class Entity {
         }
     }
 
-    public int basicAttack(Entity e) {
-        int damage = Math.max(0, this.attack - e.getDef());
-        e.setHp(Math.max(0, e.getHp() - damage));
-        return damage;
+    public int basicAttack(Entity target) {
+        int damage = Math.max(0, attack - target.getDef());
+        return target.takeDamage(damage);
+    }
+
+    public int takeDamage(int damage) {
+        int appliedDamage = Math.max(0, damage);
+        hp = Math.max(0, hp - appliedDamage);
+        return appliedDamage;
+    }
+
+    public void heal(int amount) {
+        hp = Math.min(maxHP, hp + Math.max(0, amount));
+    }
+
+    public void changeAttack(int amount) {
+        attack += amount;
+    }
+
+    public void changeDefense(int amount) {
+        defense += amount;
     }
 
     public boolean isAlive() {
         return hp > 0;
-    }
-
-    public void viewAttr() {
-        System.out.println(getName());
-        System.out.println("HP: " + getHp());
-        System.out.println("Attack: " + getAtk());
-        System.out.println("Defense: " + getDef());
-        System.out.println("Speed: " + getSpd());
-
-        if (statuses.isEmpty()) {
-            System.out.println("Status: NONE");
-        } else {
-            System.out.print("Status: ");
-            for (int i = 0; i < statuses.size(); i++) {
-                Status s = statuses.get(i);
-                System.out.print(s.getEffect() + "(" + s.getDuration() + ")");
-                if (i < statuses.size() - 1) {
-                    System.out.print(", ");
-                }
-            }
-            System.out.println();
-        }
-
-        System.out.println();
     }
 }

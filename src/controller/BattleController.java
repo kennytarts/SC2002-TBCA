@@ -1,7 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import controller.battle.EnemyActionHandler;
 import controller.battle.PlayerActionHandler;
@@ -12,24 +11,18 @@ import model.Entity;
 import model.Player;
 import view.BattleView;
 
-/**
- * BattleController:
- * Orchestrates battle rounds and delegates turn logic to helper classes.
- */
 public class BattleController {
-    private Battle battle;
-    private TurnOrderStrategy turnOrderStrategy;
-    private BattleView view;
-
-    private StatusEffectManager statusEffectManager;
-    private PlayerActionHandler playerActionHandler;
-    private EnemyActionHandler enemyActionHandler;
+    private final Battle battle;
+    private final TurnOrderStrategy turnOrderStrategy;
+    private final BattleView view;
+    private final StatusEffectManager statusEffectManager;
+    private final PlayerActionHandler playerActionHandler;
+    private final EnemyActionHandler enemyActionHandler;
 
     public BattleController(Battle battle, TurnOrderStrategy turnOrderStrategy, BattleView view) {
         this.battle = battle;
         this.turnOrderStrategy = turnOrderStrategy;
         this.view = view;
-
         this.statusEffectManager = new StatusEffectManager();
         this.playerActionHandler = new PlayerActionHandler(view);
         this.enemyActionHandler = new EnemyActionHandler(view);
@@ -38,16 +31,15 @@ public class BattleController {
     public void executeRound() throws InterruptedException {
         Player player = battle.getPlayer();
         ArrayList<Entity> enemies = battle.getEnemies();
-
-        List<Entity> turnOrder = getTurnOrder(player, enemies);
-        List<Entity> defeatedThisRound = new ArrayList<Entity>();
+        ArrayList<Entity> turnOrder = getTurnOrder(player, enemies);
+        ArrayList<Entity> defeatedThisRound = new ArrayList<Entity>();
 
         for (Entity entity : turnOrder) {
             if (!entity.isAlive()) {
                 continue;
             }
 
-            if (isBattleOver()) {
+            if (battle.isBattleOver()) {
                 break;
             }
 
@@ -71,7 +63,7 @@ public class BattleController {
 
             announceDefeatedEnemies(enemies, defeatedThisRound);
 
-            if (isBattleOver()) {
+            if (battle.isBattleOver()) {
                 break;
             }
 
@@ -89,19 +81,14 @@ public class BattleController {
         }
     }
 
-    private List<Entity> getTurnOrder(Player player, ArrayList<Entity> enemies) {
-        List<Entity> allCombatants = new ArrayList<Entity>();
+    private ArrayList<Entity> getTurnOrder(Player player, ArrayList<Entity> enemies) {
+        ArrayList<Entity> allCombatants = new ArrayList<Entity>();
         allCombatants.add(player);
         allCombatants.addAll(enemies);
-
         return turnOrderStrategy.determineTurnOrder(allCombatants);
     }
 
-    private boolean isBattleOver() {
-        return !battle.getPlayer().isAlive() || !battle.hasAliveEnemies();
-    }
-
-    private void announceDefeatedEnemies(ArrayList<Entity> enemies, List<Entity> defeatedThisRound) {
+    private void announceDefeatedEnemies(ArrayList<Entity> enemies, ArrayList<Entity> defeatedThisRound) {
         for (Entity enemy : enemies) {
             if (!enemy.isAlive() && !defeatedThisRound.contains(enemy)) {
                 view.showDefeated(enemy);

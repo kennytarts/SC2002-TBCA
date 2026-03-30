@@ -4,45 +4,45 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Entity;
+import model.Item;
 import model.Player;
+import model.Status;
 
 public class BattleView {
-    private Scanner scanner;
+    private final Scanner scanner;
 
-    public BattleView() {
-        this.scanner = new Scanner(System.in);
+    public BattleView(Scanner scanner) {
+        this.scanner = scanner;
     }
 
-    public void showTurnHeader(Entity e) {
-        System.out.println("\n--- " + e.getName() + "'s Turn ---");
+    public void showTurnHeader(Entity entity) {
+        System.out.println("\n--- " + entity.getName() + "'s Turn ---");
     }
 
-    public void showNoLongerStunned(Entity e) {
-        System.out.println(e.getName() + " is no longer stunned next turn!");
+    public void showStunned(Entity entity) {
+        System.out.println(entity.getName() + " is stunned and cannot move!");
     }
 
-    public void showStunned(Entity e) {
-        System.out.println(e.getName() + " is stunned and cannot move!");
+    public void showNoLongerInvulnerable(Entity entity) {
+        System.out.println(entity.getName() + " smoke bomb effect wore off and is no longer invulnerable!");
     }
 
-    public void showNoLongerInvulnerable(Entity e) {
-        System.out.println(e.getName() + " smoke bomb effect wore off and is no longer invulnerable!");
+    public void showDefendWoreOff(Entity entity) {
+        System.out.println(entity.getName() + " stopped defending!");
     }
 
-    public void showDefendWoreOff(Entity e) {
-        System.out.println(e.getName() + " stopped defending!");
+    public void showDefeated(Entity entity) {
+        System.out.println(entity.getName() + " is defeated!");
     }
 
-    public void showDefeated(Entity e) {
-        System.out.println(e.getName() + " is defeated!");
-    }
-
-    public void showPlayerDefeated(Player player) {
-        System.out.println(player.getName() + " has been defeated!");
-    }
-
-    public void showEntityAttributes(Entity e) {
-        e.viewAttr();
+    public void showEntityAttributes(Entity entity) {
+        System.out.println(entity.getName());
+        System.out.println("HP: " + entity.getHp());
+        System.out.println("Attack: " + entity.getAtk());
+        System.out.println("Defense: " + entity.getDef());
+        System.out.println("Speed: " + entity.getSpd());
+        System.out.println("Status: " + formatStatuses(entity));
+        System.out.println();
     }
 
     public void showNoValidTargets() {
@@ -85,7 +85,8 @@ public class BattleView {
     public int choosePlayerAction(Player player) {
         System.out.println("Choose action:");
         System.out.println("1. Basic Attack");
-        System.out.println("2. Special Skill (Cooldown: " + player.getSpecialSkillCooldown() + ")");
+        System.out.println("2. " + player.getSpecialSkillName()
+                + " (Cooldown: " + player.getSpecialSkillCooldown() + ")");
         System.out.println("3. Defend");
         System.out.println("4. Use Item");
         return scanner.nextInt();
@@ -96,28 +97,21 @@ public class BattleView {
     }
 
     public void showSkillCooldown(Player player) {
-        System.out.println("Special skill is on cooldown for "
+        System.out.println(player.getSpecialSkillName() + " is on cooldown for "
                 + player.getSpecialSkillCooldown() + " more round(s).");
     }
 
-    public void showShieldBash(Entity player, Entity target) {
-        System.out.println(player.getName() + " used Shield Bash on " + target.getName() + "!");
+    public void showSpecialSkillUsedOnTarget(Player player, Entity target) {
+        System.out.println(player.getName() + " used " + player.getSpecialSkillName()
+                + " on " + target.getName() + "!");
     }
 
-    public void showArcaneBlast(Entity player) {
-        System.out.println(player.getName() + " used Arcane Blast!");
-    }
-
-    public void showNoSpecialSkill() {
-        System.out.println("This player has no special skill.");
+    public void showSpecialSkillUsed(Player player) {
+        System.out.println(player.getName() + " used " + player.getSpecialSkillName() + "!");
     }
 
     public void showDefending(Player player) {
         System.out.println(player.getName() + " is defending!");
-    }
-
-    public void showItemsNotImplemented() {
-        System.out.println("Items not implemented yet.");
     }
 
     public void showInvalidAction() {
@@ -134,9 +128,10 @@ public class BattleView {
     }
 
     public void showItems(Player player) {
+        ArrayList<Item> items = player.getItems();
         System.out.println("Choose an item:");
-        for (int i = 0; i < player.getItems().size(); i++) {
-            System.out.println((i + 1) + ". " + player.getItems().get(i).getName());
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println((i + 1) + ". " + items.get(i).getName());
         }
     }
 
@@ -151,5 +146,24 @@ public class BattleView {
 
     public void showNoItems() {
         System.out.println("No items available.");
+    }
+
+    private String formatStatuses(Entity entity) {
+        ArrayList<Status> statuses = entity.getStatuses();
+
+        if (statuses.isEmpty()) {
+            return "NONE";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < statuses.size(); i++) {
+            Status status = statuses.get(i);
+            builder.append(status.getEffect()).append("(").append(status.getDuration()).append(")");
+            if (i < statuses.size() - 1) {
+                builder.append(", ");
+            }
+        }
+
+        return builder.toString();
     }
 }
