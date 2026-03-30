@@ -1,6 +1,7 @@
 package controller.battle;
 
 import model.Entity;
+import model.Player;
 import model.Status;
 import model.StatusEffects;
 import view.BattleView;
@@ -13,7 +14,6 @@ public class StatusEffectManager {
         }
 
         updateDefend(entity, view);
-        updateInvulnerable(entity, view);
     }
 
     public boolean handleTurnStartStatus(Entity entity, BattleView view) {
@@ -31,6 +31,14 @@ public class StatusEffectManager {
         }
 
         return true;
+    }
+
+    public void handlePlayerTurnEndStatus(Player player, BattleView view) {
+        if (!player.isAlive()) {
+            return;
+        }
+
+        updateInvulnerable(player, view);
     }
 
     private void updateDefend(Entity entity, BattleView view) {

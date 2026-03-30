@@ -50,6 +50,9 @@ public class BattleController {
             }
 
             if (statusEffectManager.handleTurnStartStatus(entity, view)) {
+                if (entity instanceof Player) {
+                    statusEffectManager.handlePlayerTurnEndStatus((Player) entity, view);
+                }
                 continue;
             }
 
@@ -57,6 +60,7 @@ public class BattleController {
 
             if (entity instanceof Player) {
                 playerActionHandler.executePlayerTurn((Player) entity, battle);
+                statusEffectManager.handlePlayerTurnEndStatus((Player) entity, view);
             } else {
                 enemyActionHandler.executeEnemyTurn(entity, player);
             }
