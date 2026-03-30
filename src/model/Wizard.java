@@ -29,17 +29,7 @@ public class Wizard extends Player {
 
     @Override
     public boolean useSpecialSkill(ArrayList<Entity> enemies) {
-        boolean hasAliveEnemy = false;
-
-        for (Entity enemy : enemies) {
-            if (enemy.isAlive()) {
-                hasAliveEnemy = true;
-                break;
-            }
-        }
-
         specialSkill(enemies);
-        // view.showArcaneBlast(this);
         return true;
     }
 }
