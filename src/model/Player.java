@@ -11,7 +11,7 @@ public abstract class Player extends Entity implements ISpecialSkill {
     }
 
     public ArrayList<Item> getItems() {
-        return new ArrayList<Item>(itemList);
+        return itemList;
     }
 
     public Item getItem(int index) {
