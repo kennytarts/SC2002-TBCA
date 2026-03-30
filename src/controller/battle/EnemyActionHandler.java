@@ -2,6 +2,7 @@ package controller.battle;
 
 import model.BattleContext;
 import model.Combatant;
+import model.Player;
 import model.StatusEffects;
 import view.BattleDisplay;
 
@@ -29,6 +30,6 @@ public class EnemyActionHandler implements CombatantTurnHandler {
     }
 
     public boolean supports(Combatant actor) {
-        return !(actor instanceof model.Player);
+        return !(actor instanceof Player);
     }
 }

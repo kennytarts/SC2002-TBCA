@@ -8,7 +8,6 @@ public interface BattleContext {
     Combatant getPlayer();
     boolean hasAliveEnemies();
     boolean isBattleOver();
-    boolean isPlayerAlive();
     void removeDefeatedEnemies();
     void setEnemies(ArrayList<Combatant> enemies);
 }

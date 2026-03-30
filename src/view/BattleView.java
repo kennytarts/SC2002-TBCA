@@ -44,10 +44,6 @@ public class BattleView implements BattleDisplay {
         System.out.println("No valid targets.");
     }
 
-    public void showInvalidChoiceDefaultTarget() {
-        System.out.println("Invalid choice. Defaulting to first alive target.");
-    }
-
     public void showBasicAttack(Player player, CombatantInfo target, int damage) {
         System.out.println(player.getName() + " dealt " + damage + " damage to " + target.getName() + "!");
     }

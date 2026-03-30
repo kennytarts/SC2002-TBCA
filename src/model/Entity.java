@@ -24,10 +24,6 @@ public abstract class Entity implements Combatant {
         return hp;
     }
 
-    public int getMaxHP() {
-        return maxHP;
-    }
-
     public int getAtk() {
         return attack;
     }

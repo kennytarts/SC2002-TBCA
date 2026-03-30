@@ -18,6 +18,8 @@ import model.SmokeBomb;
 import model.Warrior;
 import model.Wizard;
 import model.Wolf;
+import view.BattleDisplay;
+import view.BattleInput;
 import view.BattleInputView;
 import view.BattleView;
 import view.GameView;
@@ -28,16 +30,16 @@ public class GameController {
     private final ArrayList<Combatant> backupEnemies;
     private int round = 1;
     private final GameView gameView;
-    private final BattleView battleView;
-    private final BattleInputView battleInputView;
+    private final BattleDisplay battleDisplay;
+    private final BattleInput battleInput;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
         this.mainEnemies = new ArrayList<Combatant>();
         this.backupEnemies = new ArrayList<Combatant>();
         this.gameView = new GameView(scanner);
-        this.battleView = new BattleView();
-        this.battleInputView = new BattleInputView(scanner);
+        this.battleDisplay = new BattleView();
+        this.battleInput = new BattleInputView(scanner);
     }
 
     public boolean selectPlayer(int selection) {
@@ -125,13 +127,13 @@ public class GameController {
 
         Battle battle = new Battle(player, mainEnemies);
         ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
-        turnHandlers.add(new PlayerActionHandler(battleView, battleInputView));
-        turnHandlers.add(new EnemyActionHandler(battleView));
+        turnHandlers.add(new PlayerActionHandler(battleDisplay, battleInput));
+        turnHandlers.add(new EnemyActionHandler(battleDisplay));
 
         BattleEngine battleEngine = new BattleEngine(
                 battle,
                 new SpeedTurnOrderStrategy(),
-                battleView,
+                battleDisplay,
                 new StatusEffectManager(),
                 turnHandlers);
 

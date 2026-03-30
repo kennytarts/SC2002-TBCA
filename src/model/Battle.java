@@ -5,12 +5,10 @@ import java.util.ArrayList;
 public class Battle implements BattleContext {
     private final Player player;
     private ArrayList<Combatant> enemies;
-    private int roundNumber;
 
     public Battle(Player player, ArrayList<Combatant> enemies) {
         this.player = player;
         this.enemies = new ArrayList<Combatant>(enemies);
-        this.roundNumber = 1;
     }
 
     public Player getPlayer() {
@@ -32,18 +30,6 @@ public class Battle implements BattleContext {
         return combatants;
     }
 
-    public int getRoundNumber() {
-        return roundNumber;
-    }
-
-    public void incrementRound() {
-        roundNumber++;
-    }
-
-    public boolean isPlayerAlive() {
-        return player.isAlive();
-    }
-
     public boolean hasAliveEnemies() {
         for (Combatant enemy : enemies) {
             if (enemy.isAlive()) {
@@ -54,7 +40,7 @@ public class Battle implements BattleContext {
     }
 
     public boolean isBattleOver() {
-        return !isPlayerAlive() || !hasAliveEnemies();
+        return !player.isAlive() || !hasAliveEnemies();
     }
 
     public void removeDefeatedEnemies() {

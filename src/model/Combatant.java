@@ -1,7 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-
 public interface Combatant extends CombatantInfo, StatusAffected {
     boolean hasStatus(StatusEffects effect);
     void addStatus(Status newStatus);
