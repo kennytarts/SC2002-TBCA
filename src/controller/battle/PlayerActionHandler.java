@@ -26,9 +26,11 @@ public class PlayerActionHandler {
                 break;
             case 2:
                 executeSpecialSkill(player, battle, true);
+                player.reduceSpecialSkillCooldown();
                 break;
             case 3:
                 player.defend();
+                player.reduceSpecialSkillCooldown();
                 view.showDefending(player);
                 break;
             case 4:
@@ -48,6 +50,7 @@ public class PlayerActionHandler {
         }
 
         int damage = player.basicAttack(target);
+        player.reduceSpecialSkillCooldown();
         view.showBasicAttack(player, target, damage);
     }
 

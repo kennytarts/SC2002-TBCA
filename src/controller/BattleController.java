@@ -45,10 +45,6 @@ public class BattleController {
 
             view.showTurnHeader(entity);
 
-            if (entity instanceof Player) {
-                ((Player) entity).reduceSpecialSkillCooldown();
-            }
-
             if (statusEffectManager.handleTurnStartStatus(entity, view)) {
                 if (entity instanceof Player) {
                     statusEffectManager.handlePlayerTurnEndStatus((Player) entity, view);
