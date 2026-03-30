@@ -1,6 +1,6 @@
 package model;
 
-public abstract class Item implements IItem {
+public abstract class Item implements ItemEffect {
     private final String name;
     private boolean consumed;
 
