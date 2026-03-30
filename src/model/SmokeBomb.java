@@ -8,7 +8,6 @@ public class SmokeBomb extends Item {
       super("Smoke Bomb");
     }
 
-  // TODO: Add Enemy Param
   public void use(Entity user, ArrayList<Entity> enemies) {
       user.addStatus(Status.invulnerable());
       consumed();
