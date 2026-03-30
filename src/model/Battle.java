@@ -2,14 +2,14 @@ package model;
 
 import java.util.ArrayList;
 
-public class Battle {
+public class Battle implements BattleContext {
     private final Player player;
-    private ArrayList<Entity> enemies;
+    private ArrayList<Combatant> enemies;
     private int roundNumber;
 
-    public Battle(Player player, ArrayList<Entity> enemies) {
+    public Battle(Player player, ArrayList<Combatant> enemies) {
         this.player = player;
-        this.enemies = new ArrayList<Entity>(enemies);
+        this.enemies = new ArrayList<Combatant>(enemies);
         this.roundNumber = 1;
     }
 
@@ -17,12 +17,19 @@ public class Battle {
         return player;
     }
 
-    public ArrayList<Entity> getEnemies() {
+    public ArrayList<Combatant> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(ArrayList<Entity> enemies) {
-        this.enemies = new ArrayList<Entity>(enemies);
+    public void setEnemies(ArrayList<Combatant> enemies) {
+        this.enemies = new ArrayList<Combatant>(enemies);
+    }
+
+    public ArrayList<Combatant> getCombatants() {
+        ArrayList<Combatant> combatants = new ArrayList<Combatant>();
+        combatants.add(player);
+        combatants.addAll(enemies);
+        return combatants;
     }
 
     public int getRoundNumber() {
@@ -38,7 +45,7 @@ public class Battle {
     }
 
     public boolean hasAliveEnemies() {
-        for (Entity enemy : enemies) {
+        for (Combatant enemy : enemies) {
             if (enemy.isAlive()) {
                 return true;
             }

@@ -3,9 +3,13 @@ package controller;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import controller.battle.CombatantTurnHandler;
+import controller.battle.EnemyActionHandler;
+import controller.battle.PlayerActionHandler;
+import controller.battle.StatusEffectManager;
 import controller.strategy.SpeedTurnOrderStrategy;
 import model.Battle;
-import model.Entity;
+import model.Combatant;
 import model.Goblin;
 import model.Player;
 import model.Potion;
@@ -14,23 +18,26 @@ import model.SmokeBomb;
 import model.Warrior;
 import model.Wizard;
 import model.Wolf;
+import view.BattleInputView;
 import view.BattleView;
 import view.GameView;
 
 public class GameController {
     private Player player;
-    private final ArrayList<Entity> mainEnemies;
-    private final ArrayList<Entity> backupEnemies;
+    private final ArrayList<Combatant> mainEnemies;
+    private final ArrayList<Combatant> backupEnemies;
     private int round = 1;
     private final GameView gameView;
     private final BattleView battleView;
+    private final BattleInputView battleInputView;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
-        this.mainEnemies = new ArrayList<Entity>();
-        this.backupEnemies = new ArrayList<Entity>();
+        this.mainEnemies = new ArrayList<Combatant>();
+        this.backupEnemies = new ArrayList<Combatant>();
         this.gameView = new GameView(scanner);
-        this.battleView = new BattleView(scanner);
+        this.battleView = new BattleView();
+        this.battleInputView = new BattleInputView(scanner);
     }
 
     public boolean selectPlayer(int selection) {
@@ -85,11 +92,11 @@ public class GameController {
         return round;
     }
 
-    public ArrayList<Entity> getMainEnemies() {
+    public ArrayList<Combatant> getMainEnemies() {
         return mainEnemies;
     }
 
-    public ArrayList<Entity> getBackupEnemies() {
+    public ArrayList<Combatant> getBackupEnemies() {
         return backupEnemies;
     }
 
@@ -117,19 +124,25 @@ public class GameController {
         player.addItem(new SmokeBomb());
 
         Battle battle = new Battle(player, mainEnemies);
-        BattleController battleController = new BattleController(
+        ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
+        turnHandlers.add(new PlayerActionHandler(battleView, battleInputView));
+        turnHandlers.add(new EnemyActionHandler(battleView));
+
+        BattleEngine battleEngine = new BattleEngine(
                 battle,
                 new SpeedTurnOrderStrategy(),
-                battleView);
+                battleView,
+                new StatusEffectManager(),
+                turnHandlers);
 
         while (player.isAlive()) {
             gameView.showRoundHeader(round);
 
             if (round > 1) {
-                battleController.updateRoundStatusEffects();
+                battleEngine.updateRoundStatusEffects();
             }
 
-            battleController.executeRound();
+            battleEngine.executeRound();
 
             if (!player.isAlive()) {
                 gameView.showDefeat(player);
@@ -139,7 +152,7 @@ public class GameController {
             if (!battle.hasAliveEnemies()) {
                 if (!backupEnemies.isEmpty()) {
                     gameView.showBackupEnemiesArrived();
-                    battle.setEnemies(new ArrayList<Entity>(backupEnemies));
+                    battle.setEnemies(new ArrayList<Combatant>(backupEnemies));
                     backupEnemies.clear();
                 } else {
                     gameView.showVictory();

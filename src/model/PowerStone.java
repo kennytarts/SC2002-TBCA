@@ -7,7 +7,7 @@ public class PowerStone extends Item {
         super("Power Stone");
     }
 
-    public void use(Entity user, ArrayList<Entity> enemies) {
+    public void use(Combatant user, ArrayList<Combatant> enemies) {
         consume();
     }
 }

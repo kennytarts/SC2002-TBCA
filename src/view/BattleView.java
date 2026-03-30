@@ -1,41 +1,36 @@
 package view;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
-import model.Entity;
-import model.Item;
+import model.CombatantInfo;
 import model.Player;
 import model.Status;
 
-public class BattleView {
-    private final Scanner scanner;
-
-    public BattleView(Scanner scanner) {
-        this.scanner = scanner;
+public class BattleView implements BattleDisplay {
+    public BattleView() {
     }
 
-    public void showTurnHeader(Entity entity) {
+    public void showTurnHeader(CombatantInfo entity) {
         System.out.println("\n--- " + entity.getName() + "'s Turn ---");
     }
 
-    public void showStunned(Entity entity) {
+    public void showStunned(CombatantInfo entity) {
         System.out.println(entity.getName() + " is stunned and cannot move!");
     }
 
-    public void showNoLongerInvulnerable(Entity entity) {
+    public void showNoLongerInvulnerable(CombatantInfo entity) {
         System.out.println(entity.getName() + " smoke bomb effect wore off and is no longer invulnerable!");
     }
 
-    public void showDefendWoreOff(Entity entity) {
+    public void showDefendWoreOff(CombatantInfo entity) {
         System.out.println(entity.getName() + " stopped defending!");
     }
 
-    public void showDefeated(Entity entity) {
+    public void showDefeated(CombatantInfo entity) {
         System.out.println(entity.getName() + " is defeated!");
     }
 
-    public void showEntityAttributes(Entity entity) {
+    public void showEntityAttributes(CombatantInfo entity) {
         System.out.println(entity.getName());
         System.out.println("HP: " + entity.getHp());
         System.out.println("Attack: " + entity.getAtk());
@@ -53,46 +48,7 @@ public class BattleView {
         System.out.println("Invalid choice. Defaulting to first alive target.");
     }
 
-    public Entity chooseTarget(ArrayList<Entity> enemies) {
-        ArrayList<Entity> aliveTargets = new ArrayList<Entity>();
-
-        for (Entity enemy : enemies) {
-            if (enemy.isAlive()) {
-                aliveTargets.add(enemy);
-            }
-        }
-
-        if (aliveTargets.isEmpty()) {
-            return null;
-        }
-
-        System.out.println("Select a target:");
-        for (int i = 0; i < aliveTargets.size(); i++) {
-            Entity enemy = aliveTargets.get(i);
-            System.out.println((i + 1) + ". " + enemy.getName() + " (HP: " + enemy.getHp() + ")");
-        }
-
-        int choice = scanner.nextInt() - 1;
-
-        if (choice >= 0 && choice < aliveTargets.size()) {
-            return aliveTargets.get(choice);
-        }
-
-        showInvalidChoiceDefaultTarget();
-        return aliveTargets.get(0);
-    }
-
-    public int choosePlayerAction(Player player) {
-        System.out.println("Choose action:");
-        System.out.println("1. Basic Attack");
-        System.out.println("2. " + player.getSpecialSkillName()
-                + " (Cooldown: " + player.getSpecialSkillCooldown() + ")");
-        System.out.println("3. Defend");
-        System.out.println("4. Use Item");
-        return scanner.nextInt();
-    }
-
-    public void showBasicAttack(Player player, Entity target, int damage) {
+    public void showBasicAttack(Player player, CombatantInfo target, int damage) {
         System.out.println(player.getName() + " dealt " + damage + " damage to " + target.getName() + "!");
     }
 
@@ -101,7 +57,7 @@ public class BattleView {
                 + player.getSpecialSkillCooldown() + " more round(s).");
     }
 
-    public void showSpecialSkillUsedOnTarget(Player player, Entity target) {
+    public void showSpecialSkillUsedOnTarget(Player player, CombatantInfo target) {
         System.out.println(player.getName() + " used " + player.getSpecialSkillName()
                 + " on " + target.getName() + "!");
     }
@@ -118,26 +74,13 @@ public class BattleView {
         System.out.println("Invalid action.");
     }
 
-    public void showEnemyInvulnerableBlocked(Player player, Entity enemy) {
+    public void showEnemyInvulnerableBlocked(CombatantInfo player, CombatantInfo enemy) {
         System.out.println(player.getName() + " is invulnerable! "
                 + enemy.getName() + " dealt 0 damage.");
     }
 
-    public void showEnemyAttack(Entity enemy, Player player, int damage) {
+    public void showEnemyAttack(CombatantInfo enemy, CombatantInfo player, int damage) {
         System.out.println(enemy.getName() + " dealt " + damage + " damage to " + player.getName() + "!");
-    }
-
-    public void showItems(Player player) {
-        ArrayList<Item> items = player.getItems();
-        System.out.println("Choose an item:");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i).getName());
-        }
-    }
-
-    public int chooseItem(Player player) {
-        showItems(player);
-        return scanner.nextInt() - 1;
     }
 
     public void showItemUsed(String itemName) {
@@ -148,7 +91,7 @@ public class BattleView {
         System.out.println("No items available.");
     }
 
-    private String formatStatuses(Entity entity) {
+    private String formatStatuses(CombatantInfo entity) {
         ArrayList<Status> statuses = entity.getStatuses();
 
         if (statuses.isEmpty()) {

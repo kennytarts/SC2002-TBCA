@@ -18,10 +18,10 @@ public class Wizard extends Player {
     }
 
     @Override
-    public boolean useSpecialSkill(Entity target, ArrayList<Entity> enemies) {
+    public boolean useSpecialSkill(Combatant target, ArrayList<Combatant> enemies) {
         boolean used = false;
 
-        for (Entity enemy : enemies) {
+        for (Combatant enemy : enemies) {
             if (!enemy.isAlive()) {
                 continue;
             }

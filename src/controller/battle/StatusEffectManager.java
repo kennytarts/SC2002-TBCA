@@ -1,14 +1,13 @@
 package controller.battle;
 
-import model.Entity;
-import model.Player;
+import model.StatusAffected;
 import model.Status;
 import model.StatusEffects;
-import view.BattleView;
+import view.BattleDisplay;
 
-public class StatusEffectManager {
+public class StatusEffectManager implements StatusEffectProcessor {
 
-    public void updateRoundStatusEffects(Entity entity, BattleView view) {
+    public void updateRoundStatusEffects(StatusAffected entity, BattleDisplay view) {
         if (!entity.isAlive()) {
             return;
         }
@@ -16,7 +15,7 @@ public class StatusEffectManager {
         updateDefend(entity, view);
     }
 
-    public boolean handleTurnStartStatus(Entity entity, BattleView view) {
+    public boolean handleTurnStartStatus(StatusAffected entity, BattleDisplay view) {
         Status stun = entity.getStatus(StatusEffects.STUN);
 
         if (stun == null) {
@@ -33,15 +32,15 @@ public class StatusEffectManager {
         return true;
     }
 
-    public void handlePlayerTurnEndStatus(Player player, BattleView view) {
-        if (!player.isAlive()) {
+    public void handleTurnEndStatus(StatusAffected entity, BattleDisplay view) {
+        if (!entity.isAlive()) {
             return;
         }
 
-        updateInvulnerable(player, view);
+        updateInvulnerable(entity, view);
     }
 
-    private void updateDefend(Entity entity, BattleView view) {
+    private void updateDefend(StatusAffected entity, BattleDisplay view) {
         Status defend = entity.getStatus(StatusEffects.DEFEND);
 
         if (defend != null) {
@@ -55,7 +54,7 @@ public class StatusEffectManager {
         }
     }
 
-    private void updateInvulnerable(Entity entity, BattleView view) {
+    private void updateInvulnerable(StatusAffected entity, BattleDisplay view) {
         Status invulnerable = entity.getStatus(StatusEffects.INVULNERABLE);
 
         if (invulnerable != null) {

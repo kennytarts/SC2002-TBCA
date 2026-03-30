@@ -2,8 +2,8 @@ package controller.strategy;
 
 import java.util.ArrayList;
 
-import model.Entity;
+import model.Combatant;
 
 public interface TurnOrderStrategy {
-    ArrayList<Entity> determineTurnOrder(ArrayList<Entity> combatants);
+    ArrayList<Combatant> determineTurnOrder(ArrayList<Combatant> combatants);
 }

@@ -7,7 +7,7 @@ public class Potion extends Item {
         super("Potion");
     }
 
-    public void use(Entity user, ArrayList<Entity> enemies) {
+    public void use(Combatant user, ArrayList<Combatant> enemies) {
         user.heal(100);
         consume();
     }
