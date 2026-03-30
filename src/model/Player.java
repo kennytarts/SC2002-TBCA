@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import view.BattleView;
+
 public abstract class Player extends Entity implements ISpecialSkill {
     private ArrayList<Item> itemList = new ArrayList<Item>();
     private int specialSkillCooldown = 0;
@@ -47,4 +49,6 @@ public abstract class Player extends Entity implements ISpecialSkill {
             specialSkillCooldown--;
         }
     }
+
+    public abstract boolean useSpecialSkill(ArrayList<Entity> enemies, BattleView view);
 }

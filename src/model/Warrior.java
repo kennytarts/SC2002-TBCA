@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import view.BattleView;
+
 public class Warrior extends Player {
     public Warrior() {
         setHp(260);
@@ -12,17 +14,31 @@ public class Warrior extends Player {
         setName("Warrior");
     }
 
+    @Override
     public void specialSkill(ArrayList<Entity> enemies) {
         for (Entity enemy : enemies) {
-            if (!enemy.isAlive()) {
-                continue;
-            }
-
             basicAttack(enemy);
 
             if (enemy.isAlive()) {
                 enemy.addStatus(Status.stun());
             }
         }
+    }
+
+    @Override
+    public boolean useSpecialSkill(ArrayList<Entity> enemies, BattleView view) {
+        Entity target = view.chooseTarget(enemies);
+
+        if (target == null) {
+            view.showNoValidTargets();
+            return false;
+        }
+
+        ArrayList<Entity> targets = new ArrayList<Entity>();
+        targets.add(target);
+
+        specialSkill(targets);
+        view.showShieldBash(this, target);
+        return true;
     }
 }
