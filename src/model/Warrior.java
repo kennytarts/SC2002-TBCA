@@ -26,19 +26,19 @@ public class Warrior extends Player {
     }
 
     @Override
-    public boolean useSpecialSkill(ArrayList<Entity> enemies, BattleView view) {
-        Entity target = view.chooseTarget(enemies);
+    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
+        // Entity target = view.chooseTarget(enemies);
 
-        if (target == null) {
-            view.showNoValidTargets();
-            return false;
-        }
+        // if (target == null) {
+        //     view.showNoValidTargets();
+        //     return false;
+        // }
 
-        ArrayList<Entity> targets = new ArrayList<Entity>();
-        targets.add(target);
+        // ArrayList<Entity> targets = new ArrayList<Entity>();
+        // targets.add(target);
 
-        specialSkill(targets);
-        view.showShieldBash(this, target);
+        specialSkill(enemies);
+        // view.showShieldBash(this, target);
         return true;
     }
 }

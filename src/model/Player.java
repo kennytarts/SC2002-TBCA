@@ -50,5 +50,5 @@ public abstract class Player extends Entity implements ISpecialSkill {
         }
     }
 
-    public abstract boolean useSpecialSkill(ArrayList<Entity> enemies, BattleView view);
+    public abstract boolean useSpecialSkill(ArrayList<Entity> enemies);
 }

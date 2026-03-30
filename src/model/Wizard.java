@@ -2,8 +2,6 @@ package model;
 
 import java.util.ArrayList;
 
-import view.BattleView;
-
 public class Wizard extends Player {
     public Wizard() {
         setHp(200);
@@ -30,7 +28,7 @@ public class Wizard extends Player {
     }
 
     @Override
-    public boolean useSpecialSkill(ArrayList<Entity> enemies, BattleView view) {
+    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
         boolean hasAliveEnemy = false;
 
         for (Entity enemy : enemies) {
@@ -40,13 +38,8 @@ public class Wizard extends Player {
             }
         }
 
-        if (!hasAliveEnemy) {
-            view.showNoValidTargets();
-            return false;
-        }
-
         specialSkill(enemies);
-        view.showArcaneBlast(this);
+        // view.showArcaneBlast(this);
         return true;
     }
 }

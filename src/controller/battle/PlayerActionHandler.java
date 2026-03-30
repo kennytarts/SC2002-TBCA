@@ -8,6 +8,8 @@ import model.Item;
 import model.Player;
 import model.PowerStone;
 import view.BattleView;
+import model.Wizard;
+import model.Warrior;
 
 public class PlayerActionHandler {
     private BattleView view;
@@ -25,7 +27,7 @@ public class PlayerActionHandler {
                 executeBasicAttack(player, enemies);
                 break;
             case 2:
-                executeSpecialSkill(player, battle);
+                executeSpecialSkill(player, battle, true);
                 break;
             case 3:
                 player.defend();
@@ -51,15 +53,33 @@ public class PlayerActionHandler {
         view.showBasicAttack(player, target, damage);
     }
 
-    private void executeSpecialSkill(Player player, Battle battle) {
-        if (!player.canUseSpecialSkill()) {
+    private ArrayList<Entity> handleSpecialSkillEnemy(Player player, ArrayList<Entity> enemies, BattleView view) {
+        if (player instanceof Warrior) {
+            Entity target = view.chooseTarget(enemies);
+            ArrayList<Entity> targets = new ArrayList<Entity>();
+            targets.add(target);
+            view.showShieldBash(player, target);
+            return targets;
+
+        }
+        else if (player instanceof Wizard) {
+            view.showArcaneBlast(player);
+            return enemies;
+        }
+        return enemies;
+
+    } 
+
+    private void executeSpecialSkill(Player player, Battle battle, boolean cooldown) {
+        if (cooldown && !player.canUseSpecialSkill()) {
             view.showSkillCooldown(player);
             return;
         }
+        
+        ArrayList<Entity> enemies = handleSpecialSkillEnemy(player, battle.getEnemies(), view);
+        boolean used = player.useSpecialSkill(enemies);
 
-        boolean used = player.useSpecialSkill(battle.getEnemies(), view);
-
-        if (used) {
+        if (cooldown && used) {
             player.startSpecialSkillCooldown();
         }
     }
@@ -82,14 +102,8 @@ public class PlayerActionHandler {
         Item item = player.getItems().get(itemIndex);
 
         if (item instanceof PowerStone) {
-            boolean used = player.useSpecialSkill(enemies, view);
-
-            if (used) {
-                item.use(player, enemies);
-                view.showItemUsed(item.getName());
-                player.removeConsumedItems();
-            }
-            return;
+            // boolean used = player.useSpecialSkill(enemies, view);
+            executeSpecialSkill(player, battle, false);
         }
 
         item.use(player, enemies);
