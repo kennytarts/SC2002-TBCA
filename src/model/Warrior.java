@@ -12,17 +12,20 @@ public class Warrior extends Player {
         setName("Warrior");
     }
 
+    @Override
     public void specialSkill(ArrayList<Entity> enemies) {
         for (Entity enemy : enemies) {
-            if (!enemy.isAlive()) {
-                continue;
-            }
-
             basicAttack(enemy);
 
             if (enemy.isAlive()) {
                 enemy.addStatus(Status.stun());
             }
         }
+    }
+
+    @Override
+    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
+        specialSkill(enemies);
+        return true;
     }
 }

@@ -47,4 +47,6 @@ public abstract class Player extends Entity implements ISpecialSkill {
             specialSkillCooldown--;
         }
     }
+
+    public abstract boolean useSpecialSkill(ArrayList<Entity> enemies);
 }

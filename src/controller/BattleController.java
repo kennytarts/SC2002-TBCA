@@ -1,279 +1,112 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import controller.battle.EnemyActionHandler;
+import controller.battle.PlayerActionHandler;
+import controller.battle.StatusEffectManager;
+import controller.strategy.TurnOrderStrategy;
+import model.Battle;
 import model.Entity;
-import model.Item;
 import model.Player;
-import model.PowerStone;
-import model.Status;
-import model.StatusEffects;
-import model.Warrior;
-import model.Wizard;
 import view.BattleView;
 
-
+/**
+ * BattleController:
+ * Orchestrates battle rounds and delegates turn logic to helper classes.
+ */
 public class BattleController {
-    private Player player;
-    private ArrayList<Entity> currentEnemies;
+    private Battle battle;
+    private TurnOrderStrategy turnOrderStrategy;
     private BattleView view;
 
-    public BattleController(Player player, ArrayList<Entity> enemies, BattleView view) {
-        this.player = player;
-        this.currentEnemies = enemies;
+    private StatusEffectManager statusEffectManager;
+    private PlayerActionHandler playerActionHandler;
+    private EnemyActionHandler enemyActionHandler;
+
+    public BattleController(Battle battle, TurnOrderStrategy turnOrderStrategy, BattleView view) {
+        this.battle = battle;
+        this.turnOrderStrategy = turnOrderStrategy;
         this.view = view;
+
+        this.statusEffectManager = new StatusEffectManager();
+        this.playerActionHandler = new PlayerActionHandler(view);
+        this.enemyActionHandler = new EnemyActionHandler(view);
     }
 
-    private ArrayList<Entity> getTurnOrder() {
-        ArrayList<Entity> order = new ArrayList<Entity>();
+    public void executeRound() throws InterruptedException {
+        Player player = battle.getPlayer();
+        ArrayList<Entity> enemies = battle.getEnemies();
 
-        order.add(player);
+        List<Entity> turnOrder = getTurnOrder(player, enemies);
+        List<Entity> defeatedThisRound = new ArrayList<Entity>();
 
-        for (Entity e : currentEnemies) {
-            if (e != null && e.isAlive()) {
-                order.add(e);
+        for (Entity entity : turnOrder) {
+            if (!entity.isAlive()) {
+                continue;
             }
-        }
 
-        // sort by speed descending
-        order.sort((a, b) -> Integer.compare(b.getSpd(), a.getSpd()));
-        return order;
-    }
-
-    private boolean hasAliveEnemies() {
-        for (Entity enemy : currentEnemies) {
-            if (enemy.isAlive()) {
-                return true;
+            if (isBattleOver()) {
+                break;
             }
-        }
-        return false;
-    }
 
-    private boolean handleStun(Entity e) {
-        Status stun = e.getStatus(StatusEffects.STUN);
+            view.showTurnHeader(entity);
 
-        if (stun == null) {
-            return false;
-        }
-
-        view.showStunned(e);
-        stun.decrementDuration();
-
-        if (stun.isExpired()) {
-            e.removeStatus(StatusEffects.STUN);
-            view.showNoLongerStunned(e);
-        }
-
-        return true;
-    }
-
-    public void updateRoundStatuses() {
-        updateEntityStatus(player);
-
-        for (Entity enemy : currentEnemies) {
-            updateEntityStatus(enemy);
-        }
-    }
-
-    private void updateEntityStatus(Entity e) {
-        if (!e.isAlive()) {
-            return;
-        }
-
-        Status defend = e.getStatus(StatusEffects.DEFEND);
-        if (defend != null) {
-            defend.decrementDuration();
-
-            if (defend.isExpired()) {
-                e.setDef(e.getDef() - 10);
-                e.removeStatus(StatusEffects.DEFEND);
-                view.showDefendWoreOff(e);
+            if (entity instanceof Player) {
+                ((Player) entity).reduceSpecialSkillCooldown();
             }
+
+            if (statusEffectManager.handleTurnStartStatus(entity, view)) {
+                continue;
+            }
+
+            view.showEntityAttributes(entity);
+
+            if (entity instanceof Player) {
+                playerActionHandler.executePlayerTurn((Player) entity, battle);
+            } else {
+                enemyActionHandler.executeEnemyTurn(entity, player);
+            }
+
+            announceDefeatedEnemies(enemies, defeatedThisRound);
+
+            if (isBattleOver()) {
+                break;
+            }
+
+            Thread.sleep(1000);
         }
 
-        Status invulnerable = e.getStatus(StatusEffects.INVULNERABLE);
-        if (invulnerable != null) {
-            invulnerable.decrementDuration();
+        battle.removeDefeatedEnemies();
+    }
 
-            if (invulnerable.isExpired()) {
-                e.removeStatus(StatusEffects.INVULNERABLE);
-                view.showNoLongerInvulnerable(e);
-            }
+    public void updateRoundStatusEffects() {
+        statusEffectManager.updateRoundStatusEffects(battle.getPlayer(), view);
+
+        for (Entity enemy : battle.getEnemies()) {
+            statusEffectManager.updateRoundStatusEffects(enemy, view);
         }
     }
 
-    private void showDefeatedEnemies(ArrayList<Entity> defeatedThisRound) {
-        for (Entity enemy : currentEnemies) {
+    private List<Entity> getTurnOrder(Player player, ArrayList<Entity> enemies) {
+        List<Entity> allCombatants = new ArrayList<Entity>();
+        allCombatants.add(player);
+        allCombatants.addAll(enemies);
+
+        return turnOrderStrategy.determineTurnOrder(allCombatants);
+    }
+
+    private boolean isBattleOver() {
+        return !battle.getPlayer().isAlive() || !battle.hasAliveEnemies();
+    }
+
+    private void announceDefeatedEnemies(ArrayList<Entity> enemies, List<Entity> defeatedThisRound) {
+        for (Entity enemy : enemies) {
             if (!enemy.isAlive() && !defeatedThisRound.contains(enemy)) {
                 view.showDefeated(enemy);
                 defeatedThisRound.add(enemy);
             }
         }
-    }
-
-    private void useSpecialSkill() {
-        if (player instanceof Warrior) {
-            Entity target = view.chooseTarget(currentEnemies);
-            if (target == null) {
-                view.showNoValidTargets();
-                return;
-            }
-
-            ArrayList<Entity> targets = new ArrayList<Entity>();
-            targets.add(target);
-            ((Warrior) player).specialSkill(targets);
-            view.showShieldBash(player, target);
-        } 
-        
-        else if (player instanceof Wizard) {
-            if (!hasAliveEnemies()) {
-                view.showNoValidTargets();
-                return;
-            }
-
-            ((Wizard) player).specialSkill(currentEnemies);
-            view.showArcaneBlast(player);
-        } 
-        
-        else {
-            view.showNoSpecialSkill();
-            return;
-        }
-    }
-
-    private void playerTurn() {
-        int action = view.choosePlayerAction(player);
-
-        switch (action) {
-            case 1: {
-                Entity target = view.chooseTarget(currentEnemies);
-                if (target == null) {
-                    view.showNoValidTargets();
-                    return;
-                }
-
-                int damage = player.basicAttack(target);
-                view.showBasicAttack(player, target, damage);
-                break;
-            }
-
-            case 2: {
-                if (!player.canUseSpecialSkill()) {
-                    view.showSkillCooldown(player);
-                    return;
-                }
-                useSpecialSkill();
-                player.startSpecialSkillCooldown();
-                break;
-            }
-
-            case 3:
-                player.defend();
-                view.showDefending(player);
-                break;
-
-            case 4: {
-                if (player.getItems().isEmpty()) {
-                    view.showNoItems();
-                    return;
-                }
-
-                int itemIndex = view.chooseItem(player);
-
-                if (itemIndex < 0 || itemIndex >= player.getItems().size()) {
-                    view.showInvalidAction();
-                    return;
-                }
-
-                Item item = player.getItems().get(itemIndex);
-
-                if (item instanceof PowerStone) {
-                    useSpecialSkill();
-                    item.use(player, currentEnemies);
-                }
-                else {
-                    item.use(player, currentEnemies);
-                }
-
-                view.showItemUsed(item.getName());
-                player.removeConsumedItems();
-                break;
-            }
-
-            default:
-                view.showInvalidAction();
-        }
-    }
-
-    private void enemyTurn(Entity enemy) {
-        if (!player.isAlive()) {
-            return;
-        }
-
-        if (player.hasStatus(StatusEffects.INVULNERABLE)) {
-            view.showEnemyInvulnerableBlocked(player, enemy);
-            return;
-        }
-
-        int damage = enemy.basicAttack(player);
-        view.showEnemyAttack(enemy, player, damage);
-    }
-
-    public boolean enemiesRemaining() {
-        return hasAliveEnemies();
-    }
-
-    public void setEnemies(ArrayList<Entity> enemies) {
-        this.currentEnemies = enemies;
-    }
-
-    public ArrayList<Entity> getEnemies() {
-        return currentEnemies;
-    }
-
-    public void executeRound() throws InterruptedException {
-        ArrayList<Entity> turnOrder = getTurnOrder();
-        ArrayList<Entity> defeatedThisRound = new ArrayList<Entity>();
-
-        for (Entity e : turnOrder) {
-            
-            if (!e.isAlive()) {
-                continue;
-            }
-
-            if (!player.isAlive() || !hasAliveEnemies()) {
-                break;
-            }
-
-            view.showTurnHeader(e);
-
-            if (e instanceof Player) {
-                player.reduceSpecialSkillCooldown();
-            }
-
-            view.showEntityAttributes(e);
-
-            if (handleStun(e)) {
-                continue;
-            }
-
-            if (e instanceof Player) {
-                playerTurn();
-            } 
-            
-            else {
-                enemyTurn(e);
-            }
-
-            showDefeatedEnemies(defeatedThisRound);
-
-            if (!player.isAlive() || !hasAliveEnemies()) {
-                break;
-            }
-
-            Thread.sleep(1500);
-        }
-
-        currentEnemies.removeAll(defeatedThisRound);
     }
 }

@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import controller.strategy.SpeedTurnOrderStrategy;
+import model.Battle;
 import model.Entity;
 import model.Goblin;
 import model.Player;
@@ -14,17 +16,22 @@ import model.Wolf;
 import view.BattleView;
 import view.GameView;
 
+/**
+ * GameController: Game-level orchestration and flow management.
+ */
 public class GameController {
     private Player player;
     private ArrayList<Entity> mainEnemies;
     private ArrayList<Entity> backupEnemies;
     private int round = 1;
-    private GameView view;
+    private GameView gameView;
+    private BattleView battleView;
 
     public GameController() {
         this.mainEnemies = new ArrayList<Entity>();
         this.backupEnemies = new ArrayList<Entity>();
-        this.view = new GameView();
+        this.gameView = new GameView();
+        this.battleView = new BattleView();
     }
 
     public boolean selectPlayer(int selection) {
@@ -94,12 +101,12 @@ public class GameController {
 
     public void run(int playerSelection, int level) throws InterruptedException {
         if (!selectPlayer(playerSelection)) {
-            view.showInvalidPlayerSelection();
+            gameView.showInvalidPlayerSelection();
             return;
         }
 
         if (!selectLevel(level)) {
-            view.showInvalidLevelSelection();
+            gameView.showInvalidLevelSelection();
             return;
         }
 
@@ -107,31 +114,33 @@ public class GameController {
         player.addItem(new Potion());
         player.addItem(new SmokeBomb());
 
-
-        BattleView battleView = new BattleView();
-        BattleController battleController = new BattleController(player, mainEnemies, battleView);
+        Battle battle = new Battle(player, mainEnemies);
+        BattleController battleController = new BattleController(
+                battle,
+                new SpeedTurnOrderStrategy(),
+                battleView);
 
         while (player.isAlive()) {
-            view.showRoundHeader(round);
+            gameView.showRoundHeader(round);
 
             if (round > 1) {
-                battleController.updateRoundStatuses();
+                battleController.updateRoundStatusEffects();
             }
 
             battleController.executeRound();
 
             if (!player.isAlive()) {
-                view.showDefeat(player);
+                gameView.showDefeat(player);
                 break;
             }
 
-            if (!battleController.enemiesRemaining()) {
+            if (!battle.hasAliveEnemies()) {
                 if (!backupEnemies.isEmpty()) {
-                    view.showBackupEnemiesArrived();
-                    battleController.setEnemies(new ArrayList<Entity>(backupEnemies));
+                    gameView.showBackupEnemiesArrived();
+                    battle.setEnemies(new ArrayList<Entity>(backupEnemies));
                     backupEnemies.clear();
                 } else {
-                    view.showVictory();
+                    gameView.showVictory();
                     break;
                 }
             }

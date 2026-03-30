@@ -12,6 +12,7 @@ public class Wizard extends Player {
         setName("Wizard");
     }
 
+    @Override
     public void specialSkill(ArrayList<Entity> enemies) {
         for (Entity enemy : enemies) {
             if (!enemy.isAlive()) {
@@ -24,5 +25,11 @@ public class Wizard extends Player {
                 setAtk(getAtk() + 10);
             }
         }
+    }
+
+    @Override
+    public boolean useSpecialSkill(ArrayList<Entity> enemies) {
+        specialSkill(enemies);
+        return true;
     }
 }

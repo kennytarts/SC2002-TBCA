@@ -2,14 +2,18 @@ package view;
 
 import model.Player;
 
+/**
+ * GameView: Handles game-level UI messages (player selection, level selection,
+ * game flow)
+ */
 public class GameView {
 
     public void showInvalidPlayerSelection() {
-        System.out.println("Invalid player selection.");
+        System.out.println("Invalid player selection. Please choose 1 (Warrior) or 2 (Wizard).");
     }
 
     public void showInvalidLevelSelection() {
-        System.out.println("Invalid level selection.");
+        System.out.println("Invalid level selection. Please choose 1, 2, or 3.");
     }
 
     public void showRoundHeader(int round) {
@@ -17,7 +21,7 @@ public class GameView {
     }
 
     public void showDefeat(Player player) {
-        System.out.println("Defeat. " + player.getName() + " has fallen.");
+        System.out.println("\n" + player.getName() + " has been defeated! Game Over!");
     }
 
     public void showBackupEnemiesArrived() {
@@ -25,6 +29,6 @@ public class GameView {
     }
 
     public void showVictory() {
-        System.out.println("\nVictory! All enemies are defeated.");
+        System.out.println("\nVictory! All enemies have been defeated!");
     }
 }
