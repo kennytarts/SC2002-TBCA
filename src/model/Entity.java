@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public abstract class Entity {
-    private int currHP;
+    private int hp;
 	private int maxHP;
     private int attack;
     private int defense;
@@ -12,12 +12,12 @@ public abstract class Entity {
     private ArrayList<Status> statuses = new ArrayList<Status>();
 
 
-    public int getCurrentHP() {
-        return currHP;
+    public int getHp() {
+        return hp;
     }
 
-    public void setCurrentHP(int val) {
-        currHP = val;
+    public void setHp(int val) {
+        hp = val;
     }
 
     public int getMaxHP() {
