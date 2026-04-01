@@ -11,6 +11,7 @@ import controller.strategy.SpeedTurnOrderStrategy;
 import model.Battle;
 import model.Combatant;
 import model.Goblin;
+import model.Item;
 import model.Player;
 import model.Potion;
 import model.PowerStone;
@@ -54,6 +55,16 @@ public class GameController {
                 return false;
         }
         return true;
+    }
+
+    public void selectItem(ArrayList<Item> items, int choices) {
+        for (int i=0; i<choices; i++) {
+            int itemSelection = gameView.chooseItemsSelection(items);
+            Item item = items.get(itemSelection);
+            player.addItem(item);
+            items.remove(item);
+
+        }
     }
 
     public boolean selectLevel(int level) {
@@ -103,27 +114,25 @@ public class GameController {
     }
 
     public void run() throws InterruptedException {
+        
         int playerSelection = gameView.choosePlayerSelection();
-        int levelSelection = gameView.chooseLevelSelection();
-        run(playerSelection, levelSelection);
-    }
-
-    public void run(int playerSelection, int level) throws InterruptedException {
-        round = 1;
-
         if (!selectPlayer(playerSelection)) {
             gameView.showInvalidPlayerSelection();
             return;
         }
 
-        if (!selectLevel(level)) {
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(new PowerStone());
+        items.add(new Potion());
+        items.add(new SmokeBomb());
+        selectItem(items, 2);
+
+        int levelSelection = gameView.chooseLevelSelection();
+        if (!selectLevel(levelSelection)) {
             gameView.showInvalidLevelSelection();
             return;
         }
 
-        player.addItem(new PowerStone());
-        player.addItem(new Potion());
-        player.addItem(new SmokeBomb());
 
         Battle battle = new Battle(player, mainEnemies);
         ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();

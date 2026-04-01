@@ -54,8 +54,7 @@ public class BattleView implements BattleDisplay {
     }
 
     public void showSpecialSkillUsedOnTarget(Player player, CombatantInfo target) {
-        System.out.println(player.getName() + " used " + player.getSpecialSkillName()
-                + " on " + target.getName() + "!");
+        System.out.println(player.getName() + " used " + player.getSpecialSkillName() + " on " + target.getName() + "!");
     }
 
     public void showSpecialSkillUsed(Player player) {
