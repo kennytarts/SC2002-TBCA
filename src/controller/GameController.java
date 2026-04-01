@@ -112,64 +112,107 @@ public class GameController {
     }
 
     public void run() throws InterruptedException {
-        
-        int playerSelection = gameView.choosePlayerSelection();
-        if (!selectPlayer(playerSelection)) {
-            gameView.showInvalidPlayerSelection();
-            return;
-        }
+        Integer savedPlayerSelection = null;
+        ArrayList<Integer> savedItemSelections = new ArrayList<Integer>();
+        Integer savedLevelSelection = null;
+        boolean useSavedSetup = false;
 
-        ArrayList<Item> items = new ArrayList<>();
-        items.add(new PowerStone());
-        items.add(new Potion());
-        items.add(new SmokeBomb());
-        selectItem(items, 2);
+        while (true) {
+            ArrayList<Item> items = new ArrayList<Item>();
+            items.add(new PowerStone());
+            items.add(new Potion());
+            items.add(new SmokeBomb());
 
-        int levelSelection = gameView.chooseLevelSelection();
-        if (!selectLevel(levelSelection)) {
-            gameView.showInvalidLevelSelection();
-            return;
-        }
+            if (!useSavedSetup) {
+                ArrayList<Player> players = new ArrayList<Player>();
+                players.add(new Warrior());
+                players.add(new Wizard());
 
+                ArrayList<Combatant> enemies = new ArrayList<Combatant>();
+                enemies.add(new Goblin());
+                enemies.add(new Wolf());
 
-        Battle battle = new Battle(player, mainEnemies);
-        ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
-        turnHandlers.add(new PlayerActionHandler(battleDisplay, battleInput));
-        turnHandlers.add(new EnemyActionHandler(battleDisplay));
+                gameView.showLoadingScreen(players, items, enemies);
 
-        BattleEngine battleEngine = new BattleEngine(
-                battle,
-                new SpeedTurnOrderStrategy(),
-                battleDisplay,
-                new StatusEffectManager(),
-                turnHandlers);
-
-        while (player.isAlive()) {
-            gameView.showRoundHeader(round);
-
-            if (round > 1) {
-                battleEngine.updateRoundStatusEffects();
+                savedPlayerSelection = gameView.choosePlayerSelection();
+                savedItemSelections.clear();
+                for (int i = 0; i < 2; i++) {
+                    savedItemSelections.add(gameView.chooseItemsSelection(items));
+                }
+                savedLevelSelection = gameView.chooseLevelSelection();
             }
 
-            battleEngine.executeRound();
-
-            if (!player.isAlive()) {
-                gameView.showDefeat(player);
-                break;
+            round = 1;
+            if (!selectPlayer(savedPlayerSelection)) {
+                gameView.showInvalidPlayerSelection();
+                return;
             }
 
-            if (!battle.hasAliveEnemies()) {
-                if (!backupEnemies.isEmpty()) {
-                    gameView.showBackupEnemiesArrived();
-                    battle.setEnemies(new ArrayList<Combatant>(backupEnemies));
-                    backupEnemies.clear();
-                } else {
-                    gameView.showVictory();
+            player.getItems().clear();
+            for (int itemSelection : savedItemSelections) {
+                player.addItem(items.get(itemSelection).copy());
+            }
+
+            if (!selectLevel(savedLevelSelection)) {
+                gameView.showInvalidLevelSelection();
+                return;
+            }
+
+            Battle battle = new Battle(player, mainEnemies);
+            ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
+            turnHandlers.add(new PlayerActionHandler(battleDisplay, battleInput));
+            turnHandlers.add(new EnemyActionHandler(battleDisplay));
+
+            BattleEngine battleEngine = new BattleEngine(
+                    battle,
+                    new SpeedTurnOrderStrategy(),
+                    battleDisplay,
+                    new StatusEffectManager(),
+                    turnHandlers);
+
+            while (player.isAlive()) {
+                gameView.showRoundHeader(round);
+
+                if (round > 1) {
+                    battleEngine.updateRoundStatusEffects();
+                }
+
+                battleEngine.executeRound();
+                gameView.showRoundSummary(player, battle.getEnemies());
+
+                if (!player.isAlive()) {
+                    int enemiesRemaining = backupEnemies.size();
+                    for (Combatant enemy : battle.getEnemies()) {
+                        if (enemy.isAlive()) {
+                            enemiesRemaining++;
+                        }
+                    }
+                    gameView.showDefeat(enemiesRemaining, round);
                     break;
                 }
+
+                if (!battle.hasAliveEnemies()) {
+                    if (!backupEnemies.isEmpty()) {
+                        gameView.showBackupEnemiesArrived();
+                        battle.setEnemies(new ArrayList<Combatant>(backupEnemies));
+                        backupEnemies.clear();
+                    } else {
+                        gameView.showVictory(player, round);
+                        break;
+                    }
+                }
+
+                round++;
             }
 
-            round++;
+            int postGameChoice = gameView.choosePostGameOption();
+            if (postGameChoice == 1) {
+                useSavedSetup = true;
+            } else if (postGameChoice == 2) {
+                useSavedSetup = false;
+            } else {
+                return;
+            }
         }
     }
 }
