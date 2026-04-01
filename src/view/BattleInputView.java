@@ -58,6 +58,11 @@ public class BattleInputView implements BattleInput {
                 continue;
             }
 
+            if (action == 2 && !player.canUseSpecialSkill()) {
+                System.out.println(player.getSpecialSkillName()+" is on cooldown. Please choose another action.");
+                continue;
+            }
+
             if (action == 4 && player.getItems().isEmpty()) {
                 System.out.println("No items left to use. Please choose another action.");
                 continue;
