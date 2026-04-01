@@ -8,26 +8,26 @@ import controller.battle.EnemyActionHandler;
 import controller.battle.PlayerActionHandler;
 import controller.battle.StatusEffectManager;
 import controller.strategy.SpeedTurnOrderStrategy;
-import model.Battle;
-import model.Combatant;
-import model.Goblin;
-import model.Item;
-import model.LevelConfig;
-import model.Player;
-import model.Potion;
-import model.PowerStone;
-import model.SmokeBomb;
-import model.EasyMode;
-import model.MediumMode;
-import model.HardMode;
-import model.Warrior;
-import model.Wizard;
-import model.Wolf;
-import view.BattleDisplay;
-import view.BattleInput;
-import view.BattleInputView;
-import view.BattleView;
-import view.GameView;
+import model.battle.Battle;
+import model.characters.Combatant;
+import model.characters.Player;
+import model.characters.enemies.Goblin;
+import model.characters.enemies.Wolf;
+import model.characters.players.Warrior;
+import model.characters.players.Wizard;
+import model.items.Item;
+import model.items.Potion;
+import model.items.PowerStone;
+import model.items.SmokeBomb;
+import model.levels.EasyMode;
+import model.levels.HardMode;
+import model.levels.LevelConfig;
+import model.levels.MediumMode;
+import view.display.BattleDisplay;
+import view.display.BattleView;
+import view.display.GameView;
+import view.input.BattleInput;
+import view.input.BattleInputView;
 
 public class GameController {
     private Player player;
@@ -61,14 +61,6 @@ public class GameController {
         return true;
     }
 
-    public void selectItem(ArrayList<Item> items, int choices) {
-        for (int i = 0; i < choices; i++) {
-            int itemSelection = gameView.chooseItemsSelection(items);
-            Item item = items.get(itemSelection);
-            player.addItem(item.copy());
-        }
-    }
-
     public boolean selectLevel(int level) {
         mainEnemies.clear();
         backupEnemies.clear();
@@ -91,22 +83,6 @@ public class GameController {
         mainEnemies.addAll(selectedLevel.createInitialEnemies());
         backupEnemies.addAll(selectedLevel.createBackupEnemies());
         return true;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public int getRound() {
-        return round;
-    }
-
-    public ArrayList<Combatant> getMainEnemies() {
-        return mainEnemies;
-    }
-
-    public ArrayList<Combatant> getBackupEnemies() {
-        return backupEnemies;
     }
 
     public void run() throws InterruptedException {

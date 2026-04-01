@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import controller.battle.CombatantTurnHandler;
 import controller.battle.StatusEffectProcessor;
 import controller.strategy.TurnOrderStrategy;
-import model.BattleContext;
-import model.Combatant;
-import view.BattleDisplay;
+import model.battle.BattleContext;
+import model.characters.Combatant;
+import view.display.BattleDisplay;
 
 public class BattleEngine {
     private final BattleContext battle;

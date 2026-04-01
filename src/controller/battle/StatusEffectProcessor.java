@@ -1,7 +1,7 @@
 package controller.battle;
 
-import model.StatusAffected;
-import view.BattleDisplay;
+import model.status.StatusAffected;
+import view.display.BattleDisplay;
 
 public interface StatusEffectProcessor {
     void updateRoundStatusEffects(StatusAffected entity, BattleDisplay view);

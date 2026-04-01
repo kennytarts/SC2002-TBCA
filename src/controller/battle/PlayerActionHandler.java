@@ -2,13 +2,13 @@ package controller.battle;
 
 import java.util.ArrayList;
 
-import model.BattleContext;
-import model.Combatant;
-import model.Item;
-import model.Player;
-import model.PowerStone;
-import view.BattleDisplay;
-import view.BattleInput;
+import model.battle.BattleContext;
+import model.characters.Combatant;
+import model.characters.Player;
+import model.items.Item;
+import model.items.PowerStone;
+import view.display.BattleDisplay;
+import view.input.BattleInput;
 
 public class PlayerActionHandler implements CombatantTurnHandler {
     private final BattleDisplay display;

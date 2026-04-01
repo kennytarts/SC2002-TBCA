@@ -1,7 +1,7 @@
 package controller.battle;
 
-import model.BattleContext;
-import model.Combatant;
+import model.battle.BattleContext;
+import model.characters.Combatant;
 
 public interface CombatantTurnHandler {
     void executeTurn(Combatant actor, BattleContext battle);

@@ -1,9 +1,9 @@
 package controller.battle;
 
-import model.StatusAffected;
-import model.Status;
-import model.StatusEffects;
-import view.BattleDisplay;
+import model.status.StatusAffected;
+import model.status.Status;
+import model.status.StatusEffects;
+import view.display.BattleDisplay;
 
 public class StatusEffectManager implements StatusEffectProcessor {
 

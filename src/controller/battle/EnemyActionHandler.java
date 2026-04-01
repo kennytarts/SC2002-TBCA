@@ -1,10 +1,10 @@
 package controller.battle;
 
-import model.BattleContext;
-import model.Combatant;
-import model.Enemy;
-import model.Player;
-import view.BattleDisplay;
+import model.battle.BattleContext;
+import model.characters.Combatant;
+import model.characters.Enemy;
+import model.characters.Player;
+import view.display.BattleDisplay;
 
 public class EnemyActionHandler implements CombatantTurnHandler {
     private final BattleDisplay view;

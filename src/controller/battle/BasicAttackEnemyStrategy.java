@@ -1,9 +1,9 @@
 package controller.battle;
 
-import model.BattleContext;
-import model.Combatant;
-import model.StatusEffects;
-import view.BattleDisplay;
+import model.battle.BattleContext;
+import model.characters.Combatant;
+import model.status.StatusEffects;
+import view.display.BattleDisplay;
 
 public class BasicAttackEnemyStrategy implements EnemyActionStrategy {
     @Override
