@@ -2,8 +2,8 @@ package controller.battle;
 
 import model.BattleContext;
 import model.Combatant;
+import model.Enemy;
 import model.Player;
-import model.StatusEffects;
 import view.BattleDisplay;
 
 public class EnemyActionHandler implements CombatantTurnHandler {
@@ -14,19 +14,8 @@ public class EnemyActionHandler implements CombatantTurnHandler {
     }
 
     public void executeTurn(Combatant enemy, BattleContext battle) {
-        Combatant player = battle.getPlayer();
-
-        if (!player.isAlive()) {
-            return;
-        }
-
-        if (player.hasStatus(StatusEffects.INVULNERABLE)) {
-            view.showEnemyInvulnerableBlocked(player, enemy);
-            return;
-        }
-
-        int damage = enemy.basicAttack(player);
-        view.showEnemyAttack(enemy, player, damage);
+        Enemy actingEnemy = (Enemy) enemy;
+        actingEnemy.getActionStrategy().execute(actingEnemy, battle, view);
     }
 
     public boolean supports(Combatant actor) {
