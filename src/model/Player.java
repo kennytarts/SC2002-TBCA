@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public abstract class Player extends Entity implements ISpecialSkill {
+public abstract class Player extends Entity implements SpecialSkill {
     private final ArrayList<Item> itemList = new ArrayList<Item>();
     private int specialSkillCooldown = 0;
 

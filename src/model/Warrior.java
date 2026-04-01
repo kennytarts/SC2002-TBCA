@@ -18,7 +18,7 @@ public class Warrior extends Player {
     }
 
     @Override
-    public boolean useSpecialSkill(Entity target, ArrayList<Entity> enemies) {
+    public boolean useSpecialSkill(Combatant target, ArrayList<Combatant> enemies) {
         if (target == null || !target.isAlive()) {
             return false;
         }

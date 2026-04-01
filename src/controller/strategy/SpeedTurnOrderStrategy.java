@@ -2,13 +2,13 @@ package controller.strategy;
 
 import java.util.ArrayList;
 
-import model.Entity;
+import model.Combatant;
 
 public class SpeedTurnOrderStrategy implements TurnOrderStrategy {
 
     @Override
-    public ArrayList<Entity> determineTurnOrder(ArrayList<Entity> combatants) {
-        ArrayList<Entity> order = new ArrayList<Entity>(combatants);
+    public ArrayList<Combatant> determineTurnOrder(ArrayList<Combatant> combatants) {
+        ArrayList<Combatant> order = new ArrayList<Combatant>(combatants);
         order.sort((a, b) -> Integer.compare(b.getSpd(), a.getSpd()));
         return order;
     }

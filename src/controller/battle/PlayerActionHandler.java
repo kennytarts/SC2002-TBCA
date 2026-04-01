@@ -2,23 +2,27 @@ package controller.battle;
 
 import java.util.ArrayList;
 
-import model.Battle;
-import model.Entity;
+import model.BattleContext;
+import model.Combatant;
 import model.Item;
 import model.Player;
 import model.PowerStone;
-import view.BattleView;
+import view.BattleDisplay;
+import view.BattleInput;
 
-public class PlayerActionHandler {
-    private final BattleView view;
+public class PlayerActionHandler implements CombatantTurnHandler {
+    private final BattleDisplay display;
+    private final BattleInput input;
 
-    public PlayerActionHandler(BattleView view) {
-        this.view = view;
+    public PlayerActionHandler(BattleDisplay display, BattleInput input) {
+        this.display = display;
+        this.input = input;
     }
 
-    public void executePlayerTurn(Player player, Battle battle) {
-        ArrayList<Entity> enemies = battle.getEnemies();
-        int action = view.choosePlayerAction(player);
+    public void executeTurn(Combatant actor, BattleContext battle) {
+        Player player = (Player) actor;
+        ArrayList<Combatant> enemies = battle.getEnemies();
+        int action = input.choosePlayerAction(player);
 
         switch (action) {
             case 1:
@@ -26,56 +30,59 @@ public class PlayerActionHandler {
                 break;
             case 2:
                 executeSpecialSkill(player, battle, true);
+                player.reduceSpecialSkillCooldown();
                 break;
             case 3:
                 player.defend();
-                view.showDefending(player);
+                player.reduceSpecialSkillCooldown();
+                display.showDefending(player);
                 break;
             case 4:
                 executeUseItem(player, battle);
                 break;
             default:
-                view.showInvalidAction();
+                display.showInvalidAction();
         }
     }
 
-    private void executeBasicAttack(Player player, ArrayList<Entity> enemies) {
-        Entity target = view.chooseTarget(enemies);
+    private void executeBasicAttack(Player player, ArrayList<Combatant> enemies) {
+        Combatant target = input.chooseTarget(enemies);
 
         if (target == null) {
-            view.showNoValidTargets();
+            display.showNoValidTargets();
             return;
         }
 
         int damage = player.basicAttack(target);
-        view.showBasicAttack(player, target, damage);
+        player.reduceSpecialSkillCooldown();
+        display.showBasicAttack(player, target, damage);
     }
 
-    private Entity chooseSpecialSkillTarget(Player player, ArrayList<Entity> enemies) {
+    private Combatant chooseSpecialSkillTarget(Player player, ArrayList<Combatant> enemies) {
         if (!player.needsSpecialSkillTarget()) {
-            view.showSpecialSkillUsed(player);
+            display.showSpecialSkillUsed(player);
             return null;
         }
 
-        Entity target = view.chooseTarget(enemies);
+        Combatant target = input.chooseTarget(enemies);
 
         if (target == null) {
-            view.showNoValidTargets();
+            display.showNoValidTargets();
             return null;
         }
 
-        view.showSpecialSkillUsedOnTarget(player, target);
+        display.showSpecialSkillUsedOnTarget(player, target);
         return target;
     }
 
-    private boolean executeSpecialSkill(Player player, Battle battle, boolean applyCooldown) {
+    private boolean executeSpecialSkill(Player player, BattleContext battle, boolean applyCooldown) {
         if (applyCooldown && !player.canUseSpecialSkill()) {
-            view.showSkillCooldown(player);
+            display.showSkillCooldown(player);
             return false;
         }
 
-        ArrayList<Entity> enemies = battle.getEnemies();
-        Entity target = chooseSpecialSkillTarget(player, enemies);
+        ArrayList<Combatant> enemies = battle.getEnemies();
+        Combatant target = chooseSpecialSkillTarget(player, enemies);
 
         if (player.needsSpecialSkillTarget() && target == null) {
             return false;
@@ -90,16 +97,16 @@ public class PlayerActionHandler {
         return used;
     }
 
-    private void executeUseItem(Player player, Battle battle) {
+    private void executeUseItem(Player player, BattleContext battle) {
         if (player.getItems().isEmpty()) {
-            view.showNoItems();
+            display.showNoItems();
             return;
         }
 
-        int itemIndex = view.chooseItem(player);
+        int itemIndex = input.chooseItem(player);
 
         if (itemIndex < 0 || itemIndex >= player.getItems().size()) {
-            view.showInvalidAction();
+            display.showInvalidAction();
             return;
         }
 
@@ -110,7 +117,11 @@ public class PlayerActionHandler {
         }
 
         item.use(player, battle.getEnemies());
-        view.showItemUsed(item.getName());
+        display.showItemUsed(item.getName());
         player.removeConsumedItems();
+    }
+
+    public boolean supports(Combatant actor) {
+        return actor instanceof Player;
     }
 }

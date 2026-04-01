@@ -15,7 +15,13 @@ public class GameView {
         System.out.println("Choose your character:");
         System.out.println("1. Warrior");
         System.out.println("2. Wizard");
-        return scanner.nextInt();
+
+        int in = scanner.nextInt();
+        while (in < 1 || in > 2) {
+            System.out.println("Invalid choice. Please re-enter: ");
+            in = scanner.nextInt();
+        }
+        return in;
     }
 
     public int chooseLevelSelection() {
@@ -23,7 +29,13 @@ public class GameView {
         System.out.println("1. Level 1");
         System.out.println("2. Level 2");
         System.out.println("3. Level 3");
-        return scanner.nextInt();
+
+        int in = scanner.nextInt();
+        while (in < 1 || in > 3) {
+            System.out.println("Invalid choice. Please re-enter: ");
+            in = scanner.nextInt();
+        }
+        return in;
     }
 
     public void showInvalidPlayerSelection() {

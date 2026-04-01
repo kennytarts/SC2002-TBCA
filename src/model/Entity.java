@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public abstract class Entity {
+public abstract class Entity implements Combatant {
     private int hp;
     private int maxHP;
     private int attack;
@@ -22,10 +22,6 @@ public abstract class Entity {
 
     public int getHp() {
         return hp;
-    }
-
-    public int getMaxHP() {
-        return maxHP;
     }
 
     public int getAtk() {
@@ -86,7 +82,7 @@ public abstract class Entity {
         }
     }
 
-    public int basicAttack(Entity target) {
+    public int basicAttack(Combatant target) {
         int damage = Math.max(0, attack - target.getDef());
         return target.takeDamage(damage);
     }

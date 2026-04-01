@@ -7,7 +7,7 @@ public class SmokeBomb extends Item {
         super("Smoke Bomb");
     }
 
-    public void use(Entity user, ArrayList<Entity> enemies) {
+    public void use(Combatant user, ArrayList<Combatant> enemies) {
         user.addStatus(Status.invulnerable());
         consume();
     }

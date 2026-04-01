@@ -1,18 +1,21 @@
 package controller.battle;
 
-import model.Entity;
+import model.BattleContext;
+import model.Combatant;
 import model.Player;
 import model.StatusEffects;
-import view.BattleView;
+import view.BattleDisplay;
 
-public class EnemyActionHandler {
-    private final BattleView view;
+public class EnemyActionHandler implements CombatantTurnHandler {
+    private final BattleDisplay view;
 
-    public EnemyActionHandler(BattleView view) {
+    public EnemyActionHandler(BattleDisplay view) {
         this.view = view;
     }
 
-    public void executeEnemyTurn(Entity enemy, Player player) {
+    public void executeTurn(Combatant enemy, BattleContext battle) {
+        Combatant player = battle.getPlayer();
+
         if (!player.isAlive()) {
             return;
         }
@@ -24,5 +27,9 @@ public class EnemyActionHandler {
 
         int damage = enemy.basicAttack(player);
         view.showEnemyAttack(enemy, player, damage);
+    }
+
+    public boolean supports(Combatant actor) {
+        return !(actor instanceof Player);
     }
 }
