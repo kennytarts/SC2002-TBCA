@@ -33,14 +33,8 @@ public class BattleInputView implements BattleInput {
             System.out.println((i + 1) + ". " + enemy.getName() + " (HP: " + enemy.getHp() + ")");
         }
 
-        int choice = scanner.nextInt() - 1;
-
-        if (choice >= 0 && choice < aliveTargets.size()) {
-            return aliveTargets.get(choice);
-        }
-
-        System.out.println("Invalid choice. Defaulting to first alive target.");
-        return aliveTargets.get(0);
+        int choice = InputHelper.readIntInRange(scanner, 1, aliveTargets.size(), "Invalid choice. Please re-enter") - 1;
+        return aliveTargets.get(choice);
     }
 
     public int choosePlayerAction(Player player) {
@@ -51,15 +45,10 @@ public class BattleInputView implements BattleInput {
         System.out.println("4. Use Item");
 
         while (true) {
-            int action = scanner.nextInt();
-
-            if (action < 1 || action > 4) {
-                System.out.println("Invalid choice. Please re-enter");
-                continue;
-            }
+            int action = InputHelper.readIntInRange(scanner, 1, 4, "Invalid choice. Please re-enter");
 
             if (action == 2 && !player.canUseSpecialSkill()) {
-                System.out.println(player.getSpecialSkillName()+" is on cooldown. Please choose another action.");
+                System.out.println(player.getSpecialSkillName() + " is on cooldown. Please choose another action.");
                 continue;
             }
 
@@ -78,11 +67,6 @@ public class BattleInputView implements BattleInput {
         for (int i = 0; i < items.size(); i++) {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
-        int selected = scanner.nextInt();
-        while (selected < 1 || selected > items.size()) {
-            System.out.println("Invalid choice. Please re-enter");
-            selected = scanner.nextInt();
-        } 
-        return selected - 1;
+        return InputHelper.readIntInRange(scanner, 1, items.size(), "Invalid choice. Please re-enter") - 1;
     }
 }

@@ -52,12 +52,7 @@ public class GameView {
         System.out.println("1. Warrior");
         System.out.println("2. Wizard");
 
-        int in = scanner.nextInt();
-        while (in < 1 || in > 2) {
-            System.out.println("Invalid choice. Please re-enter: ");
-            in = scanner.nextInt();
-        }
-        return in;
+        return InputHelper.readIntInRange(scanner, 1, 2, "Invalid choice. Please re-enter: ");
     }
 
     public int chooseItemsSelection(ArrayList<Item> items) {
@@ -66,12 +61,7 @@ public class GameView {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
 
-        int in = scanner.nextInt();
-        while (in < 1 || in > items.size()) {
-            System.out.println("Invalid choice. Please re-enter: ");
-            in = scanner.nextInt();
-        }
-        return in - 1;
+        return InputHelper.readIntInRange(scanner, 1, items.size(), "Invalid choice. Please re-enter: ") - 1;
     }
 
     public int chooseLevelSelection() {
@@ -80,12 +70,7 @@ public class GameView {
         System.out.println("2. Medium");
         System.out.println("3. Hard");
 
-        int in = scanner.nextInt();
-        while (in < 1 || in > 3) {
-            System.out.println("Invalid choice. Please re-enter: ");
-            in = scanner.nextInt();
-        }
-        return in;
+        return InputHelper.readIntInRange(scanner, 1, 3, "Invalid choice. Please re-enter: ");
     }
 
     public void showInvalidPlayerSelection() {
@@ -135,12 +120,7 @@ public class GameView {
         System.out.println("2. Start a new game");
         System.out.println("3. Exit");
 
-        int in = scanner.nextInt();
-        while (in < 1 || in > 3) {
-            System.out.println("Invalid choice. Please re-enter: ");
-            in = scanner.nextInt();
-        }
-        return in;
+        return InputHelper.readIntInRange(scanner, 1, 3, "Invalid choice. Please re-enter: ");
     }
 
     private String formatItems(Player player) {
