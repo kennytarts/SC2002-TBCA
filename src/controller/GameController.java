@@ -12,10 +12,14 @@ import model.Battle;
 import model.Combatant;
 import model.Goblin;
 import model.Item;
+import model.LevelConfig;
 import model.Player;
 import model.Potion;
 import model.PowerStone;
 import model.SmokeBomb;
+import model.EasyMode;
+import model.MediumMode;
+import model.HardMode;
 import model.Warrior;
 import model.Wizard;
 import model.Wolf;
@@ -68,30 +72,24 @@ public class GameController {
     public boolean selectLevel(int level) {
         mainEnemies.clear();
         backupEnemies.clear();
+        LevelConfig selectedLevel;
 
         switch (level) {
             case 1:
-                mainEnemies.add(new Goblin("Goblin A"));
-                mainEnemies.add(new Goblin("Goblin B"));
-                mainEnemies.add(new Goblin("Goblin C"));
+                selectedLevel = new EasyMode();
                 break;
             case 2:
-                mainEnemies.add(new Goblin("Goblin"));
-                mainEnemies.add(new Wolf("Wolf"));
-                backupEnemies.add(new Wolf("Wolf A"));
-                backupEnemies.add(new Wolf("Wolf B"));
+                selectedLevel = new MediumMode();
                 break;
             case 3:
-                mainEnemies.add(new Goblin("Goblin A"));
-                mainEnemies.add(new Goblin("Goblin B"));
-                backupEnemies.add(new Goblin("Goblin C"));
-                backupEnemies.add(new Wolf("Wolf A"));
-                backupEnemies.add(new Wolf("Wolf B"));
+                selectedLevel = new HardMode();
                 break;
             default:
                 return false;
         }
 
+        mainEnemies.addAll(selectedLevel.createInitialEnemies());
+        backupEnemies.addAll(selectedLevel.createBackupEnemies());
         return true;
     }
 
