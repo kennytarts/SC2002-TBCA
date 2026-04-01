@@ -7,6 +7,11 @@ public class Potion extends Item {
         super("Potion");
     }
 
+    @Override
+    public Item copy() {
+        return new Potion();
+    }
+
     public void use(Combatant user, ArrayList<Combatant> enemies) {
         user.heal(100);
         consume();
