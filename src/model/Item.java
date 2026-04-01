@@ -20,4 +20,6 @@ public abstract class Item implements ItemEffect {
     protected void consume() {
         consumed = true;
     }
+
+    public abstract Item copy();
 }

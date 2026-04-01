@@ -58,12 +58,10 @@ public class GameController {
     }
 
     public void selectItem(ArrayList<Item> items, int choices) {
-        for (int i=0; i<choices; i++) {
+        for (int i = 0; i < choices; i++) {
             int itemSelection = gameView.chooseItemsSelection(items);
             Item item = items.get(itemSelection);
-            player.addItem(item);
-            items.remove(item);
-
+            player.addItem(item.copy());
         }
     }
 
