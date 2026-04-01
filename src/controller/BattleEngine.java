@@ -40,15 +40,15 @@ public class BattleEngine {
 
             view.showTurnHeader(combatant);
 
-            if (statusEffectProcessor.handleTurnStartStatus(combatant, view)) {
-                statusEffectProcessor.handleTurnEndStatus(combatant, view);
-                continue;
+            boolean turnSkipped = statusEffectProcessor.handleTurnStartStatus(combatant, view);
+
+            if (!turnSkipped) {
+                view.showEntityAttributes(combatant);
+                resolveTurnHandler(combatant).executeTurn(combatant, battle);
+                announceDefeatedEnemies(defeatedThisRound);
             }
 
-            view.showEntityAttributes(combatant);
-            resolveTurnHandler(combatant).executeTurn(combatant, battle);
             statusEffectProcessor.handleTurnEndStatus(combatant, view);
-            announceDefeatedEnemies(defeatedThisRound);
 
             if (battle.isBattleOver()) {
                 break;
