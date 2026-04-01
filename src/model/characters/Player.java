@@ -27,12 +27,7 @@ public abstract class Player extends Entity implements SpecialSkill {
     }
 
     public void removeConsumedItems() {
-        for (int i = 0; i < itemList.size(); i++) {
-            if (itemList.get(i).isConsumed()) {
-                itemList.remove(i);
-                i--;
-            }
-        }
+        itemList.removeIf(Item::isConsumed);
     }
 
     public void defend() {

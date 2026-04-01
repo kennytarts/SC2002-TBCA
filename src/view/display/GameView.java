@@ -74,14 +74,6 @@ public class GameView {
         return InputHelper.readIntInRange(scanner, 1, 3, "Invalid choice. Please re-enter: ");
     }
 
-    public void showInvalidPlayerSelection() {
-        System.out.println("Invalid player selection.");
-    }
-
-    public void showInvalidLevelSelection() {
-        System.out.println("Invalid level selection.");
-    }
-
     public void showRoundHeader(int round) {
         System.out.println("\n========== ROUND " + round + " ==========");
     }

@@ -117,20 +117,14 @@ public class GameController {
             }
 
             round = 1;
-            if (!selectPlayer(savedPlayerSelection)) {
-                gameView.showInvalidPlayerSelection();
-                return;
-            }
+            selectPlayer(savedPlayerSelection);
 
             player.getItems().clear();
             for (int itemSelection : savedItemSelections) {
                 player.addItem(items.get(itemSelection).copy());
             }
 
-            if (!selectLevel(savedLevelSelection)) {
-                gameView.showInvalidLevelSelection();
-                return;
-            }
+            selectLevel(savedLevelSelection);
 
             Battle battle = new Battle(player, mainEnemies);
             ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
