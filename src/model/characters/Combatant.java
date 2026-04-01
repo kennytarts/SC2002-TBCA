@@ -4,7 +4,7 @@ import model.status.Status;
 import model.status.StatusAffected;
 import model.status.StatusEffects;
 
-public interface Combatant extends CombatantInfo, StatusAffected {
+public interface Combatant extends StatusAffected {
     boolean hasStatus(StatusEffects effect);
     void addStatus(Status newStatus);
     int basicAttack(Combatant target);
