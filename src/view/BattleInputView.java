@@ -50,12 +50,21 @@ public class BattleInputView implements BattleInput {
         System.out.println("3. Defend");
         System.out.println("4. Use Item");
 
-        int action = scanner.nextInt();
-        while (action < 1 || action > 4) {
-            System.out.println("Invalid choice. Please re-enter");
-            action = scanner.nextInt();
+        while (true) {
+            int action = scanner.nextInt();
+
+            if (action < 1 || action > 4) {
+                System.out.println("Invalid choice. Please re-enter");
+                continue;
+            }
+
+            if (action == 4 && player.getItems().isEmpty()) {
+                System.out.println("No items left to use. Please choose another action.");
+                continue;
+            }
+
+            return action;
         }
-        return action;
     }
 
     public int chooseItem(Player player) {

@@ -1,8 +1,10 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Player;
+import model.Item;
 
 public class GameView {
     private final Scanner scanner;
@@ -22,6 +24,20 @@ public class GameView {
             in = scanner.nextInt();
         }
         return in;
+    }
+
+    public int chooseItemsSelection(ArrayList<Item> items) {
+        System.out.println("Choose your item: ");
+        for (int i = 0; i < items.size(); i++) {
+            System.out.println(i+1+". "+items.get(i).getName());
+        }
+
+        int in = scanner.nextInt();
+        while (in < 1 || in > items.size()) {
+            System.out.println("Invalid choice. Please re-enter: ");
+            in = scanner.nextInt();
+        }
+        return in - 1;
     }
 
     public int chooseLevelSelection() {
