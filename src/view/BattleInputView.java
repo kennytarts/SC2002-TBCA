@@ -46,11 +46,16 @@ public class BattleInputView implements BattleInput {
     public int choosePlayerAction(Player player) {
         System.out.println("Choose action:");
         System.out.println("1. Basic Attack");
-        System.out.println("2. " + player.getSpecialSkillName()
-                + " (Cooldown: " + player.getSpecialSkillCooldown() + ")");
+        System.out.println("2. " + player.getSpecialSkillName() + " (Cooldown: " + player.getSpecialSkillCooldown() + ")");
         System.out.println("3. Defend");
         System.out.println("4. Use Item");
-        return scanner.nextInt();
+
+        int action = scanner.nextInt();
+        while (action < 1 || action > 4) {
+            System.out.println("Invalid choice. Please re-enter");
+            action = scanner.nextInt();
+        }
+        return action;
     }
 
     public int chooseItem(Player player) {
@@ -59,6 +64,11 @@ public class BattleInputView implements BattleInput {
         for (int i = 0; i < items.size(); i++) {
             System.out.println((i + 1) + ". " + items.get(i).getName());
         }
-        return scanner.nextInt() - 1;
+        int selected = scanner.nextInt();
+        while (selected < 1 || selected > items.size()) {
+            System.out.println("Invalid choice. Please re-enter");
+            selected = scanner.nextInt();
+        } 
+        return selected - 1;
     }
 }
