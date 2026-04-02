@@ -17,6 +17,7 @@ import model.characters.Combatant;
 import model.characters.Player;
 import model.characters.enemies.Goblin;
 import model.characters.enemies.Wolf;
+import model.items.AgilityBoots;
 import model.items.Item;
 import model.levels.LevelConfig;
 import view.display.BattleDisplay;

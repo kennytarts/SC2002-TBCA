@@ -11,4 +11,5 @@ public interface Combatant extends CombatantInfo, StatusAffected {
     int takeDamage(int damage);
     void heal(int amount);
     void changeAttack(int amount);
+    void changeSpeed(int amount);
 }
