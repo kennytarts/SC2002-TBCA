@@ -1,5 +1,5 @@
 package model.characters.enemies;
-import controller.battle.BasicAttackEnemyStrategy;
+import controller.battle.OgreAttackStrategy;
 import model.characters.Enemy;
 
 public class Ogre extends Enemy {
@@ -8,7 +8,7 @@ public class Ogre extends Enemy {
     }
 
     public Ogre(String name) {
-        super(name, 80, 25, 20, 10, new BasicAttackEnemyStrategy());
+        super(name, 80, 30, 20, 10, new OgreAttackStrategy());
     }
     
 }

@@ -16,8 +16,8 @@ import model.battle.Battle;
 import model.characters.Combatant;
 import model.characters.Player;
 import model.characters.enemies.Goblin;
+import model.characters.enemies.Ogre;
 import model.characters.enemies.Wolf;
-import model.items.AgilityBoots;
 import model.items.Item;
 import model.levels.LevelConfig;
 import view.display.BattleDisplay;
@@ -201,6 +201,7 @@ public class GameController {
         ArrayList<Combatant> enemies = new ArrayList<Combatant>();
         enemies.add(new Goblin());
         enemies.add(new Wolf());
+        enemies.add(new Ogre());
         return enemies;
     }
 }
