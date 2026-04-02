@@ -1,22 +1,15 @@
 package controller.strategy;
 
 import java.util.ArrayList;
-import java.util.List;
-import model.Entity;
 
-/**
- * Concrete strategy: determines turn order based on combatant speed.
- * Higher speed = earlier turn (descending order)
- */
+import model.characters.Combatant;
+
 public class SpeedTurnOrderStrategy implements TurnOrderStrategy {
 
     @Override
-    public List<Entity> determineTurnOrder(List<Entity> combatants) {
-        List<Entity> order = new ArrayList<Entity>(combatants);
-
-        // Sort by speed descending (higher speed goes first)
+    public ArrayList<Combatant> determineTurnOrder(ArrayList<Combatant> combatants) {
+        ArrayList<Combatant> order = new ArrayList<Combatant>(combatants);
         order.sort((a, b) -> Integer.compare(b.getSpd(), a.getSpd()));
-
         return order;
     }
 }

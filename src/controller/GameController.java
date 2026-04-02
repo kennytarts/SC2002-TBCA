@@ -1,151 +1,212 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import controller.battle.CombatantTurnHandler;
+import controller.battle.EnemyActionHandler;
+import controller.battle.PlayerActionHandler;
+import controller.battle.status.StatusEffectManager;
+import controller.setup.GameSetup;
+import controller.setup.LevelResolver;
+import controller.setup.PlayerResolver;
 import controller.strategy.SpeedTurnOrderStrategy;
-import model.Battle;
-import model.Entity;
-import model.Goblin;
-import model.Player;
-import model.Potion;
-import model.PowerStone;
-import model.SmokeBomb;
-import model.Warrior;
-import model.Wizard;
-import model.Wolf;
-import view.BattleView;
-import view.GameView;
+import model.battle.Battle;
+import model.characters.Combatant;
+import model.characters.Player;
+import model.characters.enemies.Goblin;
+import model.characters.enemies.Wolf;
+import model.items.Item;
+import model.items.Potion;
+import model.items.PowerStone;
+import model.items.SmokeBomb;
+import model.levels.LevelConfig;
+import view.display.BattleDisplay;
+import view.display.BattleView;
+import view.display.GameView;
+import view.input.BattleInput;
+import view.input.BattleInputView;
 
-/**
- * GameController: Game-level orchestration and flow management.
- */
 public class GameController {
     private Player player;
-    private ArrayList<Entity> mainEnemies;
-    private ArrayList<Entity> backupEnemies;
+    private final ArrayList<Combatant> mainEnemies;
+    private final ArrayList<Combatant> backupEnemies;
     private int round = 1;
-    private GameView gameView;
-    private BattleView battleView;
+    private final GameView gameView;
+    private final BattleDisplay battleDisplay;
+    private final BattleInput battleInput;
+    private final PlayerResolver playerResolver;
+    private final LevelResolver levelResolver;
 
     public GameController() {
-        this.mainEnemies = new ArrayList<Entity>();
-        this.backupEnemies = new ArrayList<Entity>();
-        this.gameView = new GameView();
-        this.battleView = new BattleView();
+        Scanner scanner = new Scanner(System.in);
+        this.mainEnemies = new ArrayList<Combatant>();
+        this.backupEnemies = new ArrayList<Combatant>();
+        this.gameView = new GameView(scanner);
+        this.battleDisplay = new BattleView();
+        this.battleInput = new BattleInputView(scanner);
+        this.playerResolver = new PlayerResolver();
+        this.levelResolver = new LevelResolver();
     }
 
     public boolean selectPlayer(int selection) {
-        switch (selection) {
-            case 1:
-                player = new Warrior();
-                break;
-            case 2:
-                player = new Wizard();
-                break;
-            default:
-                return false;
+        Player selectedPlayer = playerResolver.resolvePlayer(selection);
+        if (selectedPlayer == null) {
+            return false;
         }
+
+        player = selectedPlayer;
         return true;
     }
 
     public boolean selectLevel(int level) {
         mainEnemies.clear();
         backupEnemies.clear();
-
-        switch (level) {
-            case 1:
-                mainEnemies.add(new Goblin("Goblin A"));
-                mainEnemies.add(new Goblin("Goblin B"));
-                mainEnemies.add(new Goblin("Goblin C"));
-                break;
-
-            case 2:
-                mainEnemies.add(new Goblin("Goblin"));
-                mainEnemies.add(new Wolf("Wolf"));
-
-                backupEnemies.add(new Wolf("Wolf A"));
-                backupEnemies.add(new Wolf("Wolf B"));
-                break;
-
-            case 3:
-                mainEnemies.add(new Goblin("Goblin A"));
-                mainEnemies.add(new Goblin("Goblin B"));
-
-                backupEnemies.add(new Goblin("Goblin C"));
-                backupEnemies.add(new Wolf("Wolf A"));
-                backupEnemies.add(new Wolf("Wolf B"));
-                break;
-
-            default:
-                return false;
+        LevelConfig selectedLevel = levelResolver.resolveLevel(level);
+        if (selectedLevel == null) {
+            return false;
         }
 
+        mainEnemies.addAll(selectedLevel.createInitialEnemies());
+        backupEnemies.addAll(selectedLevel.createBackupEnemies());
         return true;
     }
 
-    public Player getPlayer() {
-        return player;
+    public void run() throws InterruptedException {
+        GameSetup savedSetup = null;
+        boolean useSavedSetup = false;
+
+        while (true) {
+            GameSetup setup = getSetup(useSavedSetup, savedSetup);
+            savedSetup = setup;
+            playGame(setup);
+
+            int postGameChoice = handlePostGame();
+            if (postGameChoice == 1) {
+                useSavedSetup = true;
+            } else if (postGameChoice == 2) {
+                useSavedSetup = false;
+            } else {
+                return;
+            }
+        }
     }
 
-    public int getRound() {
-        return round;
-    }
-
-    public ArrayList<Entity> getMainEnemies() {
-        return mainEnemies;
-    }
-
-    public ArrayList<Entity> getBackupEnemies() {
-        return backupEnemies;
-    }
-
-    public void run(int playerSelection, int level) throws InterruptedException {
-        if (!selectPlayer(playerSelection)) {
-            gameView.showInvalidPlayerSelection();
-            return;
+    private GameSetup getSetup(boolean useSavedSetup, GameSetup savedSetup) {
+        if (useSavedSetup && savedSetup != null) {
+            return savedSetup;
         }
 
-        if (!selectLevel(level)) {
-            gameView.showInvalidLevelSelection();
-            return;
+        ArrayList<Item> items = createAvailableItems();
+        // Reuse the same resolver-based creation path here so setup previews stay
+        // consistent with the actual player objects created for the game.
+        ArrayList<Player> players = createPreviewPlayers();
+        ArrayList<Combatant> enemies = createPreviewEnemies();
+
+        gameView.showLoadingScreen(players, items, enemies);
+
+        int playerSelection = gameView.choosePlayerSelection();
+        ArrayList<Integer> itemSelections = new ArrayList<Integer>();
+        for (int i = 0; i < 2; i++) {
+            itemSelections.add(gameView.chooseItemsSelection(items));
         }
 
-        player.addItem(new PowerStone());
-        player.addItem(new Potion());
-        player.addItem(new SmokeBomb());
+        int levelSelection = gameView.chooseLevelSelection();
+        return new GameSetup(playerSelection, itemSelections, levelSelection);
+    }
+
+    private void playGame(GameSetup setup) throws InterruptedException {
+        ArrayList<Item> items = createAvailableItems();
+
+        round = 1;
+        selectPlayer(setup.getPlayerSelection());
+
+        player.getItems().clear();
+        for (int itemSelection : setup.getItemSelections()) {
+            player.addItem(items.get(itemSelection).copy());
+        }
+
+        selectLevel(setup.getLevelSelection());
 
         Battle battle = new Battle(player, mainEnemies);
-        BattleController battleController = new BattleController(
-                battle,
-                new SpeedTurnOrderStrategy(),
-                battleView);
+        BattleEngine battleEngine = createBattleEngine(battle);
 
         while (player.isAlive()) {
             gameView.showRoundHeader(round);
 
             if (round > 1) {
-                battleController.updateRoundStatusEffects();
+                battleEngine.updateRoundStatusEffects();
             }
 
-            battleController.executeRound();
+            battleEngine.executeRound();
+            gameView.showRoundSummary(player, battle.getEnemies());
 
             if (!player.isAlive()) {
-                gameView.showDefeat(player);
+                showDefeatSummary(battle);
                 break;
             }
 
             if (!battle.hasAliveEnemies()) {
                 if (!backupEnemies.isEmpty()) {
                     gameView.showBackupEnemiesArrived();
-                    battle.setEnemies(new ArrayList<Entity>(backupEnemies));
+                    battle.setEnemies(new ArrayList<Combatant>(backupEnemies));
                     backupEnemies.clear();
                 } else {
-                    gameView.showVictory();
+                    gameView.showVictory(player, round);
                     break;
                 }
             }
 
             round++;
         }
+    }
+
+    private BattleEngine createBattleEngine(Battle battle) {
+        ArrayList<CombatantTurnHandler> turnHandlers = new ArrayList<CombatantTurnHandler>();
+        turnHandlers.add(new PlayerActionHandler(battleDisplay, battleInput));
+        turnHandlers.add(new EnemyActionHandler(battleDisplay));
+
+        return new BattleEngine(
+                battle,
+                new SpeedTurnOrderStrategy(),
+                battleDisplay,
+                new StatusEffectManager(),
+                turnHandlers);
+    }
+
+    private void showDefeatSummary(Battle battle) {
+        int enemiesRemaining = backupEnemies.size();
+        for (Combatant enemy : battle.getEnemies()) {
+            if (enemy.isAlive()) {
+                enemiesRemaining++;
+            }
+        }
+        gameView.showDefeat(enemiesRemaining, round);
+    }
+
+    private int handlePostGame() {
+        return gameView.choosePostGameOption();
+    }
+
+    private ArrayList<Item> createAvailableItems() {
+        ArrayList<Item> items = new ArrayList<Item>();
+        items.add(new PowerStone());
+        items.add(new Potion());
+        items.add(new SmokeBomb());
+        return items;
+    }
+
+    private ArrayList<Player> createPreviewPlayers() {
+        ArrayList<Player> players = new ArrayList<Player>();
+        players.add(playerResolver.resolvePlayer(1));
+        players.add(playerResolver.resolvePlayer(2));
+        return players;
+    }
+
+    private ArrayList<Combatant> createPreviewEnemies() {
+        ArrayList<Combatant> enemies = new ArrayList<Combatant>();
+        enemies.add(new Goblin());
+        enemies.add(new Wolf());
+        return enemies;
     }
 }

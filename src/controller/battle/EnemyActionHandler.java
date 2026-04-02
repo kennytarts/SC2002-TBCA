@@ -1,31 +1,24 @@
 package controller.battle;
 
-import model.Entity;
-import model.Player;
-import model.StatusEffects;
-import view.BattleView;
+import model.battle.BattleContext;
+import model.characters.Combatant;
+import model.characters.Enemy;
+import model.characters.Player;
+import view.display.BattleDisplay;
 
-/**
- * Handles enemy-side battle actions.
- */
-public class EnemyActionHandler {
-    private BattleView view;
+public class EnemyActionHandler implements CombatantTurnHandler {
+    private final BattleDisplay view;
 
-    public EnemyActionHandler(BattleView view) {
+    public EnemyActionHandler(BattleDisplay view) {
         this.view = view;
     }
 
-    public void executeEnemyTurn(Entity enemy, Player player) {
-        if (!player.isAlive()) {
-            return;
-        }
+    public void executeTurn(Combatant enemy, BattleContext battle) {
+        Enemy actingEnemy = (Enemy) enemy;
+        actingEnemy.getActionStrategy().execute(actingEnemy, battle, view);
+    }
 
-        if (player.hasStatus(StatusEffects.INVULNERABLE)) {
-            view.showEnemyInvulnerableBlocked(player, enemy);
-            return;
-        }
-
-        int damage = enemy.basicAttack(player);
-        view.showEnemyAttack(enemy, player, damage);
+    public boolean supports(Combatant actor) {
+        return !(actor instanceof Player);
     }
 }
