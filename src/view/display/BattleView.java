@@ -32,7 +32,7 @@ public class BattleView implements BattleDisplay {
 
     public void showEntityAttributes(CombatantInfo entity) {
         System.out.println(entity.getName());
-        System.out.println("HP: " + entity.getHp());
+        System.out.println("HP: " + entity.getHp()+"/"+entity.getMaxHp());
         System.out.println("Attack: " + entity.getAtk());
         System.out.println("Defense: " + entity.getDef());
         System.out.println("Speed: " + entity.getSpd());

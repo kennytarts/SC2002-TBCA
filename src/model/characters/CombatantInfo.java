@@ -6,6 +6,7 @@ import model.status.Status;
 
 public interface CombatantInfo {
     int getHp();
+    int getMaxHp();
     int getAtk();
     int getDef();
     int getSpd();
