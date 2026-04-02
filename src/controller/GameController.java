@@ -8,6 +8,7 @@ import controller.battle.EnemyActionHandler;
 import controller.battle.PlayerActionHandler;
 import controller.battle.status.StatusEffectManager;
 import controller.setup.GameSetup;
+import controller.setup.ItemResolver;
 import controller.setup.LevelResolver;
 import controller.setup.PlayerResolver;
 import controller.strategy.SpeedTurnOrderStrategy;
@@ -17,9 +18,6 @@ import model.characters.Player;
 import model.characters.enemies.Goblin;
 import model.characters.enemies.Wolf;
 import model.items.Item;
-import model.items.Potion;
-import model.items.PowerStone;
-import model.items.SmokeBomb;
 import model.levels.LevelConfig;
 import view.display.BattleDisplay;
 import view.display.BattleView;
@@ -37,6 +35,7 @@ public class GameController {
     private final BattleInput battleInput;
     private final PlayerResolver playerResolver;
     private final LevelResolver levelResolver;
+    private final ItemResolver itemResolver;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
@@ -47,6 +46,7 @@ public class GameController {
         this.battleInput = new BattleInputView(scanner);
         this.playerResolver = new PlayerResolver();
         this.levelResolver = new LevelResolver();
+        this.itemResolver = new ItemResolver();
     }
 
     public boolean selectPlayer(int selection) {
@@ -97,18 +97,18 @@ public class GameController {
             return savedSetup;
         }
 
-        ArrayList<Item> items = createAvailableItems();
+        ArrayList<String> itemNames = itemResolver.getItemNames();
         // Reuse the same resolver-based creation path here so setup previews stay
         // consistent with the actual player objects created for the game.
         ArrayList<Player> players = createPreviewPlayers();
         ArrayList<Combatant> enemies = createPreviewEnemies();
 
-        gameView.showLoadingScreen(players, items, enemies);
+        gameView.showLoadingScreen(players, itemNames, enemies);
 
         int playerSelection = gameView.choosePlayerSelection();
         ArrayList<Integer> itemSelections = new ArrayList<Integer>();
         for (int i = 0; i < 2; i++) {
-            itemSelections.add(gameView.chooseItemsSelection(items));
+            itemSelections.add(gameView.chooseItemsSelection(itemNames));
         }
 
         int levelSelection = gameView.chooseLevelSelection();
@@ -116,14 +116,15 @@ public class GameController {
     }
 
     private void playGame(GameSetup setup) throws InterruptedException {
-        ArrayList<Item> items = createAvailableItems();
-
         round = 1;
         selectPlayer(setup.getPlayerSelection());
 
         player.getItems().clear();
         for (int itemSelection : setup.getItemSelections()) {
-            player.addItem(items.get(itemSelection).copy());
+            Item item = itemResolver.resolveItem(itemSelection);
+            if (item != null) {
+                player.addItem(item);
+            }
         }
 
         selectLevel(setup.getLevelSelection());
@@ -186,14 +187,6 @@ public class GameController {
 
     private int handlePostGame() {
         return gameView.choosePostGameOption();
-    }
-
-    private ArrayList<Item> createAvailableItems() {
-        ArrayList<Item> items = new ArrayList<Item>();
-        items.add(new PowerStone());
-        items.add(new Potion());
-        items.add(new SmokeBomb());
-        return items;
     }
 
     private ArrayList<Player> createPreviewPlayers() {
