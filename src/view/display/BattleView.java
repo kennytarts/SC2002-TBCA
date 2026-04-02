@@ -19,7 +19,7 @@ public class BattleView implements BattleDisplay {
     }
 
     public void showNoLongerInvulnerable(CombatantInfo entity) {
-        System.out.println(entity.getName() + " smoke bomb effect wore off and is no longer invulnerable!");
+        System.out.println(entity.getName() + "'s Smoke Bomb effect wore off.");
     }
 
     public void showDefendWoreOff(CombatantInfo entity) {
@@ -32,7 +32,7 @@ public class BattleView implements BattleDisplay {
 
     public void showEntityAttributes(CombatantInfo entity) {
         System.out.println(entity.getName());
-        System.out.println("HP: " + entity.getHp()+"/"+entity.getMaxHp());
+        System.out.println("HP: " + entity.getHp() + "/" + entity.getMaxHp());
         System.out.println("Attack: " + entity.getAtk());
         System.out.println("Defense: " + entity.getDef());
         System.out.println("Speed: " + entity.getSpd());
@@ -70,7 +70,7 @@ public class BattleView implements BattleDisplay {
     }
 
     public void showEnemyInvulnerableBlocked(CombatantInfo player, CombatantInfo enemy) {
-        System.out.println(player.getName() + " is invulnerable! "
+        System.out.println(player.getName() + " is invulnerable. "
                 + enemy.getName() + " dealt 0 damage.");
     }
 
@@ -79,7 +79,7 @@ public class BattleView implements BattleDisplay {
     }
 
     public void showItemUsed(String itemName) {
-        System.out.println(itemName + " used!");
+        System.out.println(itemName + " was used.");
     }
 
     public void showNoItems() {

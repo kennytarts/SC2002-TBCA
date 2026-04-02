@@ -13,6 +13,8 @@ public class StatusEffectManager implements StatusEffectProcessor {
 
     public StatusEffectManager() {
         this.handlers = new HashMap<model.status.StatusEffects, StatusEffectHandler>();
+        // Each effect is delegated to its own handler so new status behavior can
+        // be added with minimal change to the manager itself
         register(new StunStatusEffectHandler());
         register(new DefendStatusEffectHandler());
         register(new InvulnerableStatusEffectHandler());

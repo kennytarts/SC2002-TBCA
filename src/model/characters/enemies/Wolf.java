@@ -10,6 +10,8 @@ public class Wolf extends Enemy {
     }
 
     public Wolf(String name) {
+        // The concrete enemy chooses its strategy so wolf behavior can change
+        // later without changing the shared Enemy base class.
         super(name, 40, 45, 5, 35, new BasicAttackEnemyStrategy());
     }
 }
