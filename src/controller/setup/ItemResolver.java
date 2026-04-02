@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import model.items.AgilityBoots;
 import model.items.Item;
 import model.items.Potion;
 import model.items.PowerStone;
@@ -20,6 +21,8 @@ public class ItemResolver {
         register(1, "Power Stone", PowerStone::new);
         register(2, "Potion", Potion::new);
         register(3, "Smoke Bomb", SmokeBomb::new);
+        register(4, "Agility Boots", AgilityBoots::new);
+
     }
 
     public Item resolveItem(int selection) {
