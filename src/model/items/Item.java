@@ -1,6 +1,10 @@
 package model.items;
 
-public abstract class Item implements ItemEffect {
+import java.util.ArrayList;
+
+import model.characters.Combatant;
+
+public abstract class Item {
     private final String name;
     private boolean consumed;
 
@@ -20,6 +24,8 @@ public abstract class Item implements ItemEffect {
     protected void consume() {
         consumed = true;
     }
+
+    public abstract void use(Combatant user, ArrayList<Combatant> enemies);
 
     public abstract Item copy();
 }
