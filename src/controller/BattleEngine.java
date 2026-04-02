@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import controller.battle.CombatantTurnHandler;
-import controller.battle.StatusEffectProcessor;
+import controller.battle.status.StatusEffectProcessor;
 import controller.strategy.TurnOrderStrategy;
 import model.battle.BattleContext;
 import model.characters.Combatant;
