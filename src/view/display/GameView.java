@@ -18,7 +18,7 @@ public class GameView {
         this.scanner = scanner;
     }
 
-    public void showLoadingScreen(ArrayList<Player> players, ArrayList<Item> items, ArrayList<Combatant> enemies) {
+    public void showLoadingScreen(ArrayList<Player> players, ArrayList<String> itemNames, ArrayList<Combatant> enemies) {
         System.out.println("\n========== TURN-BASED COMBAT ARENA ==========");
         System.out.println("Players:");
         for (Player player : players) {
@@ -29,8 +29,8 @@ public class GameView {
         }
 
         System.out.println("\nItems (choose 2, duplicates allowed):");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i).getName());
+        for (int i = 0; i < itemNames.size(); i++) {
+            System.out.println((i + 1) + ". " + itemNames.get(i));
         }
 
         System.out.println("\nEnemies:");
@@ -56,13 +56,13 @@ public class GameView {
         return InputHelper.readIntInRange(scanner, 1, 2, "Invalid choice. Please re-enter: ");
     }
 
-    public int chooseItemsSelection(ArrayList<Item> items) {
+    public int chooseItemsSelection(ArrayList<String> itemNames) {
         System.out.println("Choose your item:");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i).getName());
+        for (int i = 0; i < itemNames.size(); i++) {
+            System.out.println((i + 1) + ". " + itemNames.get(i));
         }
 
-        return InputHelper.readIntInRange(scanner, 1, items.size(), "Invalid choice. Please re-enter: ") - 1;
+        return InputHelper.readIntInRange(scanner, 1, itemNames.size(), "Invalid choice. Please re-enter: ");
     }
 
     public int chooseLevelSelection() {
