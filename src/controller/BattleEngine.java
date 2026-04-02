@@ -10,6 +10,8 @@ import model.characters.Combatant;
 import view.display.BattleDisplay;
 
 public class BattleEngine {
+    private static final long TURN_DELAY_MS = 1500L;
+
     private final BattleContext battle;
     private final TurnOrderStrategy turnOrderStrategy;
     private final BattleDisplay view;
@@ -25,7 +27,7 @@ public class BattleEngine {
         this.turnHandlers = new ArrayList<CombatantTurnHandler>(turnHandlers);
     }
 
-    public void executeRound() {
+    public void executeRound() throws InterruptedException {
         ArrayList<Combatant> turnOrder = turnOrderStrategy.determineTurnOrder(battle.getCombatants());
         ArrayList<Combatant> defeatedThisRound = new ArrayList<Combatant>();
 
@@ -53,6 +55,8 @@ public class BattleEngine {
             if (battle.isBattleOver()) {
                 break;
             }
+
+            Thread.sleep(TURN_DELAY_MS);
         }
 
         battle.removeDefeatedEnemies();

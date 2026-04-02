@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import model.characters.Combatant;
 import model.levels.EasyMode;
+import model.levels.ExtremeMode;
 import model.levels.HardMode;
 import model.levels.LevelConfig;
 import model.levels.MediumMode;
@@ -21,6 +22,8 @@ public class LevelResolver {
         register(1, "Easy - 3 enemies (3 Goblins)", EasyMode::new);
         register(2, "Medium - 2 initial enemies (1 Goblin, 1 Wolf), 2 backup enemies (2 Wolves)", MediumMode::new);
         register(3, "Hard - 2 initial enemies (2 Goblins), 3 backup enemies (2 Wolves)", HardMode::new);
+        register(4, "Extrene - 3 initial enemies (1 Ogre, 2 Goblins), 2 backup enemies (2 Wolves)", ExtremeMode::new);
+
     }
 
     public LevelConfig resolveLevel(int selection) {
