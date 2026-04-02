@@ -78,8 +78,8 @@ public class BattleView implements BattleDisplay {
         System.out.println(enemy.getName() + " dealt " + damage + " damage to " + player.getName() + "!");
     }
 
-    public void showItemUsed(String itemName) {
-        System.out.println(itemName + " was used.");
+    public void showItemUsed(CombatantInfo user, String itemName) {
+        System.out.println(user.getName() + " used " + itemName + "!");
     }
 
     public void showNoItems() {

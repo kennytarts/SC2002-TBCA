@@ -122,7 +122,7 @@ public class PlayerActionHandler implements CombatantTurnHandler {
         }
 
         item.use(player, battle.getEnemies());
-        display.showItemUsed(item.getName());
+        display.showItemUsed(player, item.getName());
         player.removeConsumedItems();
     }
 
