@@ -100,13 +100,10 @@ public class GameController {
         }
 
         ArrayList<Item> items = createAvailableItems();
-        ArrayList<Player> players = new ArrayList<Player>();
-        players.add(new Warrior());
-        players.add(new Wizard());
-
-        ArrayList<Combatant> enemies = new ArrayList<Combatant>();
-        enemies.add(new Goblin());
-        enemies.add(new Wolf());
+        // Reuse the same resolver-based creation path here so setup previews stay
+        // consistent with the actual player objects created for the game.
+        ArrayList<Player> players = createPreviewPlayers();
+        ArrayList<Combatant> enemies = createPreviewEnemies();
 
         gameView.showLoadingScreen(players, items, enemies);
 
@@ -199,5 +196,19 @@ public class GameController {
         items.add(new Potion());
         items.add(new SmokeBomb());
         return items;
+    }
+
+    private ArrayList<Player> createPreviewPlayers() {
+        ArrayList<Player> players = new ArrayList<Player>();
+        players.add(playerResolver.resolvePlayer(1));
+        players.add(playerResolver.resolvePlayer(2));
+        return players;
+    }
+
+    private ArrayList<Combatant> createPreviewEnemies() {
+        ArrayList<Combatant> enemies = new ArrayList<Combatant>();
+        enemies.add(new Goblin());
+        enemies.add(new Wolf());
+        return enemies;
     }
 }
