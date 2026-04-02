@@ -15,9 +15,6 @@ import controller.strategy.SpeedTurnOrderStrategy;
 import model.battle.Battle;
 import model.characters.Combatant;
 import model.characters.Player;
-import model.characters.enemies.Goblin;
-import model.characters.enemies.Wolf;
-import model.items.AgilityBoots;
 import model.items.Item;
 import model.levels.LevelConfig;
 import view.display.BattleDisplay;
@@ -99,20 +96,23 @@ public class GameController {
         }
 
         ArrayList<String> itemNames = itemResolver.getItemNames();
-        // Reuse the same resolver-based creation path here so setup previews stay
-        // consistent with the actual player objects created for the game.
         ArrayList<Player> players = createPreviewPlayers();
         ArrayList<Combatant> enemies = createPreviewEnemies();
+        ArrayList<String> levels = levelResolver.getLevelDescriptions();
 
-        gameView.showLoadingScreen(players, itemNames, enemies);
+        gameView.showLoadingScreenHeader();
+        gameView.showPlayersSection(players);
+        int playerSelection = gameView.choosePlayerSelection(players);
 
-        int playerSelection = gameView.choosePlayerSelection();
+        gameView.showItemsSection(itemNames);
         ArrayList<Integer> itemSelections = new ArrayList<Integer>();
         for (int i = 0; i < 2; i++) {
-            itemSelections.add(gameView.chooseItemsSelection(itemNames));
+            itemSelections.add(gameView.chooseItemsSelection(itemNames, i + 1));
         }
 
-        int levelSelection = gameView.chooseLevelSelection();
+        gameView.showEnemiesSection(enemies);
+        gameView.showLevelsSection(levels);
+        int levelSelection = gameView.chooseLevelSelection(levels);
         return new GameSetup(playerSelection, itemSelections, levelSelection);
     }
 
@@ -191,16 +191,10 @@ public class GameController {
     }
 
     private ArrayList<Player> createPreviewPlayers() {
-        ArrayList<Player> players = new ArrayList<Player>();
-        players.add(playerResolver.resolvePlayer(1));
-        players.add(playerResolver.resolvePlayer(2));
-        return players;
+        return playerResolver.getPlayerOptions();
     }
 
     private ArrayList<Combatant> createPreviewEnemies() {
-        ArrayList<Combatant> enemies = new ArrayList<Combatant>();
-        enemies.add(new Goblin());
-        enemies.add(new Wolf());
-        return enemies;
+        return levelResolver.getEnemyPreviews();
     }
 }

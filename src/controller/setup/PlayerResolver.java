@@ -1,6 +1,7 @@
 package controller.setup;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -12,7 +13,7 @@ public class PlayerResolver {
     private final Map<Integer, Supplier<Player>> playerCreators;
 
     public PlayerResolver() {
-        this.playerCreators = new HashMap<Integer, Supplier<Player>>();
+        this.playerCreators = new LinkedHashMap<Integer, Supplier<Player>>();
         playerCreators.put(1, Warrior::new);
         playerCreators.put(2, Wizard::new);
     }
@@ -24,5 +25,13 @@ public class PlayerResolver {
         }
 
         return playerCreator.get();
+    }
+
+    public ArrayList<Player> getPlayerOptions() {
+        ArrayList<Player> players = new ArrayList<Player>();
+        for (Supplier<Player> playerCreator : playerCreators.values()) {
+            players.add(playerCreator.get());
+        }
+        return players;
     }
 }
