@@ -16,6 +16,7 @@ import model.characters.Combatant;
 import model.characters.Player;
 import model.characters.enemies.Goblin;
 import model.characters.enemies.Wolf;
+import model.items.AgilityBoots;
 import model.items.Item;
 import model.items.Potion;
 import model.items.PowerStone;
@@ -193,6 +194,7 @@ public class GameController {
         items.add(new PowerStone());
         items.add(new Potion());
         items.add(new SmokeBomb());
+        items.add(new AgilityBoots());
         return items;
     }
 

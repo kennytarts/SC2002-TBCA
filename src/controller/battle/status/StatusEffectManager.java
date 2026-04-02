@@ -18,6 +18,7 @@ public class StatusEffectManager implements StatusEffectProcessor {
         register(new StunStatusEffectHandler());
         register(new DefendStatusEffectHandler());
         register(new InvulnerableStatusEffectHandler());
+        register(new SpeedStatusEffectHandler());
     }
 
     public void updateRoundStatusEffects(Combatant entity, BattleDisplay view) {

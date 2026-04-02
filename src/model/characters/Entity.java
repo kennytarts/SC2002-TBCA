@@ -115,4 +115,8 @@ public abstract class Entity implements Combatant {
     public boolean isAlive() {
         return hp > 0;
     }
+
+    public void changeSpeed(int amount) {
+        speed += amount;
+    }
 }

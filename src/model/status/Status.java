@@ -42,4 +42,8 @@ public class Status {
     public static Status invulnerable() {
         return new Status(StatusEffects.INVULNERABLE);
     }
+
+    public static Status speed() {
+        return new Status(StatusEffects.SPEED);
+    }
 }
