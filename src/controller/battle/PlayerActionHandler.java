@@ -112,8 +112,13 @@ public class PlayerActionHandler implements CombatantTurnHandler {
 
         Item item = player.getItem(itemIndex);
 
+        // check if item used is PowerStone
+        // do not reduce special skill cooldown if PowerStone is used
         if (item instanceof PowerStone) {
             executeSpecialSkill(player, battle, false);
+        }
+        else {
+            player.reduceSpecialSkillCooldown();
         }
 
         item.use(player, battle.getEnemies());
