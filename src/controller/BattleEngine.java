@@ -25,7 +25,7 @@ public class BattleEngine {
         this.turnHandlers = new ArrayList<CombatantTurnHandler>(turnHandlers);
     }
 
-    public void executeRound() throws InterruptedException {
+    public void executeRound() {
         ArrayList<Combatant> turnOrder = turnOrderStrategy.determineTurnOrder(battle.getCombatants());
         ArrayList<Combatant> defeatedThisRound = new ArrayList<Combatant>();
 
@@ -53,8 +53,6 @@ public class BattleEngine {
             if (battle.isBattleOver()) {
                 break;
             }
-
-            Thread.sleep(1000);
         }
 
         battle.removeDefeatedEnemies();

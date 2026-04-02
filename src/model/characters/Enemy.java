@@ -1,14 +1,13 @@
 package model.characters;
 
-import controller.battle.BasicAttackEnemyStrategy;
 import controller.battle.EnemyActionStrategy;
 
 public abstract class Enemy extends Entity {
     private final EnemyActionStrategy actionStrategy;
 
-    protected Enemy(String name, int maxHP, int attack, int defense, int speed) {
+    protected Enemy(String name, int maxHP, int attack, int defense, int speed, EnemyActionStrategy actionStrategy) {
         super(name, maxHP, attack, defense, speed);
-        this.actionStrategy = new BasicAttackEnemyStrategy();
+        this.actionStrategy = actionStrategy;
     }
 
     public EnemyActionStrategy getActionStrategy() {
