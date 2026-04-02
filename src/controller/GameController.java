@@ -19,10 +19,7 @@ import model.items.Item;
 import model.items.Potion;
 import model.items.PowerStone;
 import model.items.SmokeBomb;
-import model.levels.EasyMode;
-import model.levels.HardMode;
 import model.levels.LevelConfig;
-import model.levels.MediumMode;
 import view.display.BattleDisplay;
 import view.display.BattleView;
 import view.display.GameView;
@@ -37,6 +34,8 @@ public class GameController {
     private final GameView gameView;
     private final BattleDisplay battleDisplay;
     private final BattleInput battleInput;
+    private final PlayerResolver playerResolver;
+    private final LevelResolver levelResolver;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
@@ -45,39 +44,26 @@ public class GameController {
         this.gameView = new GameView(scanner);
         this.battleDisplay = new BattleView();
         this.battleInput = new BattleInputView(scanner);
+        this.playerResolver = new PlayerResolver();
+        this.levelResolver = new LevelResolver();
     }
 
     public boolean selectPlayer(int selection) {
-        switch (selection) {
-            case 1:
-                player = new Warrior();
-                break;
-            case 2:
-                player = new Wizard();
-                break;
-            default:
-                return false;
+        Player selectedPlayer = playerResolver.resolvePlayer(selection);
+        if (selectedPlayer == null) {
+            return false;
         }
+
+        player = selectedPlayer;
         return true;
     }
 
     public boolean selectLevel(int level) {
         mainEnemies.clear();
         backupEnemies.clear();
-        LevelConfig selectedLevel;
-
-        switch (level) {
-            case 1:
-                selectedLevel = new EasyMode();
-                break;
-            case 2:
-                selectedLevel = new MediumMode();
-                break;
-            case 3:
-                selectedLevel = new HardMode();
-                break;
-            default:
-                return false;
+        LevelConfig selectedLevel = levelResolver.resolveLevel(level);
+        if (selectedLevel == null) {
+            return false;
         }
 
         mainEnemies.addAll(selectedLevel.createInitialEnemies());
