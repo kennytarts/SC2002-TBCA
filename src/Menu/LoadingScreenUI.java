@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-// DTO to hold the selected setup configurations to pass to the Battle Engine
 class GameConfig {
     String playerClass;
     List<String> selectedItems = new ArrayList<>();
@@ -77,7 +76,6 @@ public class LoadingScreenUI {
         return getValidInput("Select Difficulty (1-3): ", 1, 3);
     }
 
-    // Helper method to ensure valid integer input and prevent crashes
     private int getValidInput(String prompt, int min, int max) {
         int input = -1;
         while (true) {
