@@ -16,8 +16,6 @@ import model.characters.Combatant;
 import model.characters.Player;
 import model.characters.enemies.Goblin;
 import model.characters.enemies.Wolf;
-import model.characters.players.Warrior;
-import model.characters.players.Wizard;
 import model.items.Item;
 import model.items.Potion;
 import model.items.PowerStone;
