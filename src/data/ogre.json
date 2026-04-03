@@ -1,10 +1,1 @@
-{
-  "name": "Ogre",
-  "type": "enemy",
-  "stats": {
-    "hp": 80,
-    "attack": 30,
-    "defense": 20,
-    "speed": 10
-  }
-}
+{"name":"Ogre","type":"enemy","stats":{"hp":80,"attack":30,"defense":20,"speed":10}}

@@ -9,10 +9,9 @@ import model.data.EntityDataService;
 import model.status.Status;
 
 public class Warrior extends Player {
-    private static final HashMap<String, Integer> DATA = EntityDataService.getData("../data/warrior");
-
     public Warrior() {
-        super("Warrior", DATA.get("hp"), DATA.get("attack"), DATA.get("defense"), DATA.get("speed"));
+        HashMap<String, Integer> data = EntityDataService.getData("../data/warrior");
+        super("Warrior", data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
     }
 
     @Override

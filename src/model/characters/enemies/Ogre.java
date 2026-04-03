@@ -7,14 +7,13 @@ import model.characters.Enemy;
 import model.data.EntityDataService;
 
 public class Ogre extends Enemy {
-    private static final HashMap<String, Integer> DATA = EntityDataService.getData("../data/ogre");
-
     public Ogre() {
         this("Ogre");
     }
 
     public Ogre(String name) {
-        super(name, DATA.get("hp"), DATA.get("attack"), DATA.get("defense"), DATA.get("speed"),
+        HashMap<String, Integer> data = EntityDataService.getData("../data/ogre");
+        super(name, data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"),
                 new OgreAttackStrategy());
     }
     

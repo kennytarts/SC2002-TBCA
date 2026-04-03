@@ -8,10 +8,9 @@ import model.characters.Player;
 import model.data.EntityDataService;
 
 public class Wizard extends Player {
-    private static final HashMap<String, Integer> DATA = EntityDataService.getData("../data/wizard");
-
     public Wizard() {
-        super("Wizard", DATA.get("hp"), DATA.get("attack"), DATA.get("defense"), DATA.get("speed"));
+        HashMap<String, Integer> data = EntityDataService.getData("../data/wizard");
+        super("Wizard", data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
     }
 
     @Override
