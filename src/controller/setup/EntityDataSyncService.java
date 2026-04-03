@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 public class EntityDataSyncService {
     private static final String[] ENTITY_FILES = { "warrior", "wizard", "goblin", "wolf", "ogre" };
     private static final Path DATA_DIRECTORY = Path.of("src", "data");
-    private static final String BASE_URL = "https://raw.githubusercontent.com/kennytarts/SC2002-TBCA/refs/heads/glenn/data-fetch/src/data";
+    private static final String BASE_URL = "https://raw.githubusercontent.com/kennytarts/SC2002-TBCA/refs/heads/glenn/API";
 
     public void syncEntityData() {
         HttpClient httpClient = HttpClient.newHttpClient();
