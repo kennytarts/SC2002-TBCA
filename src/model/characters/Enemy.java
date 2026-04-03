@@ -1,6 +1,6 @@
 package model.characters;
 
-import controller.battle.EnemyActionStrategy;
+import controller.battle.enemy.EnemyActionStrategy;
 
 public abstract class Enemy extends Entity {
     private final EnemyActionStrategy actionStrategy;

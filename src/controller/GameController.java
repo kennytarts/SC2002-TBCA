@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controller.battle.CombatantTurnHandler;
-import controller.battle.EnemyActionHandler;
 import controller.battle.PlayerActionHandler;
+import controller.battle.enemy.EnemyActionHandler;
 import controller.battle.status.StatusEffectManager;
 import controller.setup.GameSetup;
 import controller.setup.ItemResolver;

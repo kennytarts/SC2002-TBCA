@@ -1,5 +1,6 @@
 package model.characters.enemies;
-import controller.battle.OgreAttackStrategy;
+
+import controller.battle.enemy.OgreAttackStrategy;
 import model.characters.Enemy;
 
 public class Ogre extends Enemy {

@@ -1,4 +1,4 @@
-package controller.battle;
+package controller.battle.enemy;
 
 import model.battle.BattleContext;
 import model.characters.Combatant;

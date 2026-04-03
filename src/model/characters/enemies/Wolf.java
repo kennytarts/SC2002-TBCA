@@ -1,6 +1,6 @@
 package model.characters.enemies;
 
-import controller.battle.BasicAttackEnemyStrategy;
+import controller.battle.enemy.BasicAttackEnemyStrategy;
 import model.characters.Enemy;
 
 public class Wolf extends Enemy {
