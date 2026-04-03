@@ -1,15 +1,21 @@
 package model.characters.enemies;
 
+import java.util.HashMap;
+
 import controller.battle.enemy.OgreAttackStrategy;
 import model.characters.Enemy;
+import model.data.EntityDataService;
 
 public class Ogre extends Enemy {
+    private static final HashMap<String, Integer> DATA = EntityDataService.getData("../data/ogre");
+
     public Ogre() {
         this("Ogre");
     }
 
     public Ogre(String name) {
-        super(name, 80, 30, 20, 10, new OgreAttackStrategy());
+        super(name, DATA.get("hp"), DATA.get("attack"), DATA.get("defense"), DATA.get("speed"),
+                new OgreAttackStrategy());
     }
     
 }

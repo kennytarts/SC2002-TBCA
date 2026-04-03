@@ -1,13 +1,17 @@
 package model.characters.players;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.characters.Combatant;
 import model.characters.Player;
+import model.data.EntityDataService;
 
 public class Wizard extends Player {
+    private static final HashMap<String, Integer> DATA = EntityDataService.getData("../data/wizard");
+
     public Wizard() {
-        super("Wizard", 200, 50, 10, 20);
+        super("Wizard", DATA.get("hp"), DATA.get("attack"), DATA.get("defense"), DATA.get("speed"));
     }
 
     @Override

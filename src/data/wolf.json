@@ -1,0 +1,10 @@
+{
+  "name": "Wolf",
+  "type": "enemy",
+  "stats": {
+    "hp": 40,
+    "attack": 45,
+    "defense": 5,
+    "speed": 35
+  }
+}

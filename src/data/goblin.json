@@ -1,0 +1,10 @@
+{
+  "name": "Goblin",
+  "type": "enemy",
+  "stats": {
+    "hp": 55,
+    "attack": 35,
+    "defense": 15,
+    "speed": 25
+  }
+}
