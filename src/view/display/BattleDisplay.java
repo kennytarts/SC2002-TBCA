@@ -10,7 +10,6 @@ public interface BattleDisplay {
     void showDefendWoreOff(CombatantInfo entity);
     void showDefeated(CombatantInfo entity);
     void showEntityAttributes(CombatantInfo entity);
-    void showEnemyInvulnerableBlocked(CombatantInfo player, CombatantInfo enemy);
     void showEnemyAttack(CombatantInfo enemy, CombatantInfo player, int damage);
     void showItemUsed(CombatantInfo user, String itemName);
     void showNoValidTargets();

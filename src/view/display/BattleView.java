@@ -69,11 +69,6 @@ public class BattleView implements BattleDisplay {
         System.out.println("Invalid action.");
     }
 
-    public void showEnemyInvulnerableBlocked(CombatantInfo player, CombatantInfo enemy) {
-        System.out.println(player.getName() + " is invulnerable. "
-                + enemy.getName() + " dealt 0 damage.");
-    }
-
     public void showEnemyAttack(CombatantInfo enemy, CombatantInfo player, int damage) {
         System.out.println(enemy.getName() + " dealt " + damage + " damage to " + player.getName() + "!");
     }

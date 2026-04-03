@@ -2,7 +2,6 @@ package controller.battle;
 
 import model.battle.BattleContext;
 import model.characters.Combatant;
-import model.status.StatusEffects;
 import view.display.BattleDisplay;
 
 public abstract class EnemyActionStrategy {
@@ -10,11 +9,6 @@ public abstract class EnemyActionStrategy {
         Combatant player = battle.getPlayer();
 
         if (!player.isAlive()) {
-            return;
-        }
-
-        if (player.hasStatus(StatusEffects.INVULNERABLE)) {
-            view.showEnemyInvulnerableBlocked(player, enemy);
             return;
         }
 
