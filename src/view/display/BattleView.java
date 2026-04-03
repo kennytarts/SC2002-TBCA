@@ -85,7 +85,7 @@ public class BattleView implements BattleDisplay {
         ArrayList<Status> statuses = entity.getStatuses();
 
         if (statuses.isEmpty()) {
-            return "NONE";
+            return "None";
         }
 
         StringBuilder builder = new StringBuilder();
