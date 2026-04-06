@@ -18,60 +18,65 @@ public class GameView {
         this.scanner = scanner;
     }
 
-    public void showLoadingScreen(ArrayList<Player> players, ArrayList<Item> items, ArrayList<Combatant> enemies) {
-        System.out.println("\n========== TURN-BASED COMBAT ARENA ==========");
-        System.out.println("Players:");
+    public void showLoadingScreenHeader() {
+        System.out.println("\n========== LOADING SCREEN - INITIATION ==========");
+    }
+
+    public void showPlayersSection(ArrayList<Player> players) {
+        System.out.println("\nList Players");
+        int count = 1;
         for (Player player : players) {
-            System.out.println(player.getName() + " - HP: " + player.getHp()
+            System.out.println(count + ". " + player.getName() + " - HP: " + player.getHp()
                     + ", Attack: " + player.getAtk()
                     + ", Defense: " + player.getDef()
                     + ", Speed: " + player.getSpd());
+            count++;
         }
+    }
 
-        System.out.println("\nItems (choose 2, duplicates allowed):");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i).getName());
+    public void showItemsSection(ArrayList<String> itemNames) {
+        System.out.println("\nOption to pick Item");
+        System.out.println("Items Available (choose 2, duplicates allowed):");
+        for (int i = 0; i < itemNames.size(); i++) {
+            System.out.println((i + 1) + ". " + itemNames.get(i));
         }
+    }
 
-        System.out.println("\nEnemies:");
+    public void showEnemiesSection(ArrayList<Combatant> enemies) {
+        System.out.println("\nList Enemies");
         for (Combatant enemy : enemies) {
             System.out.println(enemy.getName() + " - HP: " + enemy.getHp()
                     + ", Attack: " + enemy.getAtk()
                     + ", Defense: " + enemy.getDef()
                     + ", Speed: " + enemy.getSpd());
         }
+    }
 
-        System.out.println("\nDifficulty Levels:");
-        System.out.println("1. Easy   - 3 enemies (3 Goblins)");
-        System.out.println("2. Medium - 2 initial enemies (1 Goblin, 1 Wolf), 2 backup enemies (2 Wolves)");
-        System.out.println("3. Hard   - 2 initial enemies (2 Goblins), 3 backup enemies (1 Goblin, 2 Wolves)");
+    public void showLevelsSection(ArrayList<String> levelDescriptions) {
+        System.out.println("\nList levels of difficulty");
+        System.out.println("List number of enemy combatants by levels of difficulty");
+        for (int i = 0; i < levelDescriptions.size(); i++) {
+            System.out.println((i + 1) + ". " + levelDescriptions.get(i));
+        }
         System.out.println();
     }
 
-    public int choosePlayerSelection() {
+    public int choosePlayerSelection(ArrayList<Player> players) {
         System.out.println("Choose your character:");
-        System.out.println("1. Warrior");
-        System.out.println("2. Wizard");
 
-        return InputHelper.readIntInRange(scanner, 1, 2, "Invalid choice. Please re-enter: ");
+        return InputHelper.readIntInRange(scanner, 1, players.size(), "Invalid choice. Please re-enter: ");
     }
 
-    public int chooseItemsSelection(ArrayList<Item> items) {
-        System.out.println("Choose your item:");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.println((i + 1) + ". " + items.get(i).getName());
-        }
+    public int chooseItemsSelection(ArrayList<String> itemNames, int selectionNumber) {
+        System.out.println("Choose item " + selectionNumber + " of 2:");
 
-        return InputHelper.readIntInRange(scanner, 1, items.size(), "Invalid choice. Please re-enter: ") - 1;
+        return InputHelper.readIntInRange(scanner, 1, itemNames.size(), "Invalid choice. Please re-enter: ");
     }
 
-    public int chooseLevelSelection() {
+    public int chooseLevelSelection(ArrayList<String> levelDescriptions) {
         System.out.println("Choose a difficulty level:");
-        System.out.println("1. Easy");
-        System.out.println("2. Medium");
-        System.out.println("3. Hard");
 
-        return InputHelper.readIntInRange(scanner, 1, 3, "Invalid choice. Please re-enter: ");
+        return InputHelper.readIntInRange(scanner, 1, levelDescriptions.size(), "Invalid choice. Please re-enter: ");
     }
 
     public void showRoundHeader(int round) {
@@ -141,7 +146,7 @@ public class GameView {
     private String formatStatuses(Combatant combatant) {
         ArrayList<Status> statuses = combatant.getStatuses();
         if (statuses.isEmpty()) {
-            return "NONE";
+            return "None";
         }
 
         StringBuilder builder = new StringBuilder();

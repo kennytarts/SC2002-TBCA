@@ -4,22 +4,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import controller.battle.CombatantTurnHandler;
-import controller.battle.EnemyActionHandler;
 import controller.battle.PlayerActionHandler;
+import controller.battle.enemy.EnemyActionHandler;
 import controller.battle.status.StatusEffectManager;
 import controller.setup.GameSetup;
+import controller.setup.ItemResolver;
 import controller.setup.LevelResolver;
 import controller.setup.PlayerResolver;
 import controller.strategy.SpeedTurnOrderStrategy;
 import model.battle.Battle;
 import model.characters.Combatant;
 import model.characters.Player;
-import model.characters.enemies.Goblin;
-import model.characters.enemies.Wolf;
 import model.items.Item;
-import model.items.Potion;
-import model.items.PowerStone;
-import model.items.SmokeBomb;
 import model.levels.LevelConfig;
 import view.display.BattleDisplay;
 import view.display.BattleView;
@@ -37,6 +33,7 @@ public class GameController {
     private final BattleInput battleInput;
     private final PlayerResolver playerResolver;
     private final LevelResolver levelResolver;
+    private final ItemResolver itemResolver;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
@@ -47,6 +44,7 @@ public class GameController {
         this.battleInput = new BattleInputView(scanner);
         this.playerResolver = new PlayerResolver();
         this.levelResolver = new LevelResolver();
+        this.itemResolver = new ItemResolver();
     }
 
     public boolean selectPlayer(int selection) {
@@ -67,8 +65,8 @@ public class GameController {
             return false;
         }
 
-        mainEnemies.addAll(selectedLevel.createInitialEnemies());
-        backupEnemies.addAll(selectedLevel.createBackupEnemies());
+        mainEnemies.addAll(selectedLevel.createInitialEnemies(levelResolver.getEnemyResolver()));
+        backupEnemies.addAll(selectedLevel.createBackupEnemies(levelResolver.getEnemyResolver()));
         return true;
     }
 
@@ -97,33 +95,37 @@ public class GameController {
             return savedSetup;
         }
 
-        ArrayList<Item> items = createAvailableItems();
-        // Reuse the same resolver-based creation path here so setup previews stay
-        // consistent with the actual player objects created for the game.
+        ArrayList<String> itemNames = itemResolver.getItemNames();
         ArrayList<Player> players = createPreviewPlayers();
         ArrayList<Combatant> enemies = createPreviewEnemies();
+        ArrayList<String> levels = levelResolver.getLevelDescriptions();
 
-        gameView.showLoadingScreen(players, items, enemies);
+        gameView.showLoadingScreenHeader();
+        gameView.showPlayersSection(players);
+        int playerSelection = gameView.choosePlayerSelection(players);
 
-        int playerSelection = gameView.choosePlayerSelection();
+        gameView.showItemsSection(itemNames);
         ArrayList<Integer> itemSelections = new ArrayList<Integer>();
         for (int i = 0; i < 2; i++) {
-            itemSelections.add(gameView.chooseItemsSelection(items));
+            itemSelections.add(gameView.chooseItemsSelection(itemNames, i + 1));
         }
 
-        int levelSelection = gameView.chooseLevelSelection();
+        gameView.showEnemiesSection(enemies);
+        gameView.showLevelsSection(levels);
+        int levelSelection = gameView.chooseLevelSelection(levels);
         return new GameSetup(playerSelection, itemSelections, levelSelection);
     }
 
     private void playGame(GameSetup setup) throws InterruptedException {
-        ArrayList<Item> items = createAvailableItems();
-
         round = 1;
         selectPlayer(setup.getPlayerSelection());
 
         player.getItems().clear();
         for (int itemSelection : setup.getItemSelections()) {
-            player.addItem(items.get(itemSelection).copy());
+            Item item = itemResolver.resolveItem(itemSelection);
+            if (item != null) {
+                player.addItem(item);
+            }
         }
 
         selectLevel(setup.getLevelSelection());
@@ -188,25 +190,11 @@ public class GameController {
         return gameView.choosePostGameOption();
     }
 
-    private ArrayList<Item> createAvailableItems() {
-        ArrayList<Item> items = new ArrayList<Item>();
-        items.add(new PowerStone());
-        items.add(new Potion());
-        items.add(new SmokeBomb());
-        return items;
-    }
-
     private ArrayList<Player> createPreviewPlayers() {
-        ArrayList<Player> players = new ArrayList<Player>();
-        players.add(playerResolver.resolvePlayer(1));
-        players.add(playerResolver.resolvePlayer(2));
-        return players;
+        return playerResolver.getPlayerOptions();
     }
 
     private ArrayList<Combatant> createPreviewEnemies() {
-        ArrayList<Combatant> enemies = new ArrayList<Combatant>();
-        enemies.add(new Goblin());
-        enemies.add(new Wolf());
-        return enemies;
+        return levelResolver.getEnemyPreviews();
     }
 }

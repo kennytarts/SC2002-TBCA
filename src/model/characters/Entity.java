@@ -95,6 +95,10 @@ public abstract class Entity implements Combatant {
     }
 
     public int takeDamage(int damage) {
+        if (hasStatus(StatusEffects.INVULNERABLE)) {
+            return 0;
+        }
+
         int appliedDamage = Math.max(0, damage);
         hp = Math.max(0, hp - appliedDamage);
         return appliedDamage;
@@ -114,5 +118,9 @@ public abstract class Entity implements Combatant {
 
     public boolean isAlive() {
         return hp > 0;
+    }
+
+    public void changeSpeed(int amount) {
+        speed += amount;
     }
 }

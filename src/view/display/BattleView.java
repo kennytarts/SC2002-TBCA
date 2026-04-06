@@ -69,17 +69,12 @@ public class BattleView implements BattleDisplay {
         System.out.println("Invalid action.");
     }
 
-    public void showEnemyInvulnerableBlocked(CombatantInfo player, CombatantInfo enemy) {
-        System.out.println(player.getName() + " is invulnerable. "
-                + enemy.getName() + " dealt 0 damage.");
-    }
-
     public void showEnemyAttack(CombatantInfo enemy, CombatantInfo player, int damage) {
         System.out.println(enemy.getName() + " dealt " + damage + " damage to " + player.getName() + "!");
     }
 
-    public void showItemUsed(String itemName) {
-        System.out.println(itemName + " was used.");
+    public void showItemUsed(CombatantInfo user, String itemName) {
+        System.out.println(user.getName() + " used " + itemName + "!");
     }
 
     public void showNoItems() {
@@ -90,7 +85,7 @@ public class BattleView implements BattleDisplay {
         ArrayList<Status> statuses = entity.getStatuses();
 
         if (statuses.isEmpty()) {
-            return "NONE";
+            return "None";
         }
 
         StringBuilder builder = new StringBuilder();

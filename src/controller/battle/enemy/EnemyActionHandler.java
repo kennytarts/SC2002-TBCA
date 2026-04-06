@@ -1,5 +1,6 @@
-package controller.battle;
+package controller.battle.enemy;
 
+import controller.battle.CombatantTurnHandler;
 import model.battle.BattleContext;
 import model.characters.Combatant;
 import model.characters.Enemy;

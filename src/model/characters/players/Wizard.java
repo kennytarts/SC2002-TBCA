@@ -6,8 +6,8 @@ import model.characters.Combatant;
 import model.characters.Player;
 
 public class Wizard extends Player {
-    public Wizard() {
-        super("Wizard", 200, 50, 10, 20);
+    public Wizard(int hp, int attack, int defense, int speed) {
+        super("Wizard", hp, attack, defense, speed);
     }
 
     @Override

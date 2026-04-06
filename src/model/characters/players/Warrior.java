@@ -7,8 +7,8 @@ import model.characters.Player;
 import model.status.Status;
 
 public class Warrior extends Player {
-    public Warrior() {
-        super("Warrior", 260, 40, 20, 30);
+    public Warrior(int hp, int attack, int defense, int speed) {
+        super("Warrior", hp, attack, defense, speed);
     }
 
     @Override
