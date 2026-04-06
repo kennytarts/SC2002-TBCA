@@ -22,11 +22,6 @@ public class GameView {
         System.out.println("\n========== LOADING SCREEN - INITIATION ==========");
     }
 
-    public void showEntityDataLoadError() {
-        System.out.println("\nUnable to start game. Required entity data files are missing.");
-        System.out.println("Please ensure all player and enemy JSON files exist in src/data.");
-    }
-
     public void showPlayersSection(ArrayList<Player> players) {
         System.out.println("\nList Players");
         int count = 1;

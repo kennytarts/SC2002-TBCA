@@ -1,14 +1,12 @@
 package controller.setup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import model.characters.Player;
 import model.characters.players.Warrior;
 import model.characters.players.Wizard;
-import model.data.EntityDataService;
 
 public class PlayerResolver {
     private final Map<Integer, String> playerTypes;
@@ -40,12 +38,11 @@ public class PlayerResolver {
             return null;
         }
 
-        HashMap<String, Integer> data = EntityDataService.getData("../data/" + playerType);
         if ("warrior".equals(playerType)) {
-            return new Warrior(data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
+            return new Warrior(260, 40, 20, 30);
         }
         if ("wizard".equals(playerType)) {
-            return new Wizard(data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
+            return new Wizard(200, 50, 10, 20);
         }
 
         return null;

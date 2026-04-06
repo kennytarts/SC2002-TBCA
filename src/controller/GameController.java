@@ -7,7 +7,6 @@ import controller.battle.CombatantTurnHandler;
 import controller.battle.PlayerActionHandler;
 import controller.battle.enemy.EnemyActionHandler;
 import controller.battle.status.StatusEffectManager;
-import controller.setup.EntityDataSyncService;
 import controller.setup.GameSetup;
 import controller.setup.ItemResolver;
 import controller.setup.LevelResolver;
@@ -35,7 +34,6 @@ public class GameController {
     private final PlayerResolver playerResolver;
     private final LevelResolver levelResolver;
     private final ItemResolver itemResolver;
-    private final EntityDataSyncService entityDataSyncService;
 
     public GameController() {
         Scanner scanner = new Scanner(System.in);
@@ -47,7 +45,6 @@ public class GameController {
         this.playerResolver = new PlayerResolver();
         this.levelResolver = new LevelResolver();
         this.itemResolver = new ItemResolver();
-        this.entityDataSyncService = new EntityDataSyncService();
     }
 
     public boolean selectPlayer(int selection) {
@@ -74,12 +71,6 @@ public class GameController {
     }
 
     public void run() throws InterruptedException {
-        entityDataSyncService.syncEntityData();
-        if (!entityDataSyncService.areAllEntityFilesPresent()) {
-            gameView.showEntityDataLoadError();
-            return;
-        }
-
         GameSetup savedSetup = null;
         boolean useSavedSetup = false;
 
