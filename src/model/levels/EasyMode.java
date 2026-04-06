@@ -3,7 +3,6 @@ package model.levels;
 import java.util.ArrayList;
 
 import model.characters.Combatant;
-import model.characters.enemies.Goblin;
 
 public class EasyMode implements LevelConfig {
     @Override
