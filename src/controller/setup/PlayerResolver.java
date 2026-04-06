@@ -34,17 +34,13 @@ public class PlayerResolver {
     }
 
     private Player createPlayer(String playerType) {
-        if (playerType == null) {
-            return null;
+        switch (playerType) {
+            case "warrior":
+                return new Warrior(260, 40, 20, 30);
+            case "wizard":
+                return new Wizard(200, 50, 10, 20);
+            default:
+                return null;
         }
-
-        if ("warrior".equals(playerType)) {
-            return new Warrior(260, 40, 20, 30);
-        }
-        if ("wizard".equals(playerType)) {
-            return new Wizard(200, 50, 10, 20);
-        }
-
-        return null;
     }
 }
