@@ -1,37 +1,54 @@
 package controller.setup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import model.characters.Player;
 import model.characters.players.Warrior;
+import model.characters.players.Warrior;
 import model.characters.players.Wizard;
+import model.data.EntityDataService;
 
 public class PlayerResolver {
-    private final Map<Integer, Supplier<Player>> playerCreators;
+    private final Map<Integer, String> playerTypes;
 
     public PlayerResolver() {
-        this.playerCreators = new LinkedHashMap<Integer, Supplier<Player>>();
-        playerCreators.put(1, Warrior::new);
-        playerCreators.put(2, Wizard::new);
+        this.playerTypes = new LinkedHashMap<Integer, String>();
+        playerTypes.put(1, "warrior");
+        playerTypes.put(2, "wizard");
     }
 
     public Player resolvePlayer(int selection) {
-        Supplier<Player> playerCreator = playerCreators.get(selection);
-        if (playerCreator == null) {
-            return null;
-        }
-
-        return playerCreator.get();
+        String playerType = playerTypes.get(selection);
+        return createPlayer(playerType);
     }
 
     public ArrayList<Player> getPlayerOptions() {
         ArrayList<Player> players = new ArrayList<Player>();
-        for (Supplier<Player> playerCreator : playerCreators.values()) {
-            players.add(playerCreator.get());
+        for (String playerType : playerTypes.values()) {
+            Player player = createPlayer(playerType);
+            if (player != null) {
+                players.add(player);
+            }
         }
         return players;
+    }
+
+    private Player createPlayer(String playerType) {
+        if (playerType == null) {
+            return null;
+        }
+
+        HashMap<String, Integer> data = EntityDataService.getData("../data/" + playerType);
+        if ("warrior".equals(playerType)) {
+            return new Warrior(data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
+        }
+        if ("wizard".equals(playerType)) {
+            return new Wizard(data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
+        }
+
+        return null;
     }
 }

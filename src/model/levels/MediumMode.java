@@ -3,23 +3,20 @@ package model.levels;
 import java.util.ArrayList;
 
 import model.characters.Combatant;
-import model.characters.enemies.Goblin;
-import model.characters.enemies.Wolf;
-
 public class MediumMode implements LevelConfig {
     @Override
-    public ArrayList<Combatant> createInitialEnemies() {
+    public ArrayList<Combatant> createInitialEnemies(EnemyFactory enemyFactory) {
         ArrayList<Combatant> enemies = new ArrayList<Combatant>();
-        enemies.add(new Goblin("Goblin"));
-        enemies.add(new Wolf("Wolf"));
+        enemies.add(enemyFactory.createGoblin("Goblin"));
+        enemies.add(enemyFactory.createWolf("Wolf"));
         return enemies;
     }
 
     @Override
-    public ArrayList<Combatant> createBackupEnemies() {
+    public ArrayList<Combatant> createBackupEnemies(EnemyFactory enemyFactory) {
         ArrayList<Combatant> enemies = new ArrayList<Combatant>();
-        enemies.add(new Wolf("Wolf A"));
-        enemies.add(new Wolf("Wolf B"));
+        enemies.add(enemyFactory.createWolf("Wolf A"));
+        enemies.add(enemyFactory.createWolf("Wolf B"));
         return enemies;
     }
 }

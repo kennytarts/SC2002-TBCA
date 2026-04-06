@@ -1,17 +1,14 @@
 package model.characters.players;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import model.characters.Combatant;
 import model.characters.Player;
-import model.data.EntityDataService;
 import model.status.Status;
 
 public class Warrior extends Player {
-    public Warrior() {
-        HashMap<String, Integer> data = EntityDataService.getData("../data/warrior");
-        super("Warrior", data.get("hp"), data.get("attack"), data.get("defense"), data.get("speed"));
+    public Warrior(int hp, int attack, int defense, int speed) {
+        super("Warrior", hp, attack, defense, speed);
     }
 
     @Override
