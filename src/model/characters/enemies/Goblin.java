@@ -4,8 +4,12 @@ import controller.battle.enemy.BasicAttackEnemyStrategy;
 import model.characters.Enemy;
 
 public class Goblin extends Enemy {
-    public Goblin(String name, int hp, int attack, int defense, int speed) {
-        super(name, hp, attack, defense, speed,
-                new BasicAttackEnemyStrategy());
+
+    public Goblin() {
+        this("Goblin");
+    }
+
+    public Goblin(String name) {
+        super(name, 55, 35, 15, 25, new BasicAttackEnemyStrategy());
     }
 }

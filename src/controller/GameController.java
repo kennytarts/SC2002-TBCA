@@ -65,8 +65,8 @@ public class GameController {
             return false;
         }
 
-        mainEnemies.addAll(selectedLevel.createInitialEnemies(levelResolver.getEnemyResolver()));
-        backupEnemies.addAll(selectedLevel.createBackupEnemies(levelResolver.getEnemyResolver()));
+        mainEnemies.addAll(selectedLevel.createInitialEnemies());
+        backupEnemies.addAll(selectedLevel.createBackupEnemies());
         return true;
     }
 
