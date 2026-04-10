@@ -41,19 +41,7 @@ public abstract class Player extends Entity implements SpecialSkill {
         return specialSkillCooldown;
     }
 
-    public boolean canUseSpecialSkill() {
-        return specialSkillCooldown == 0;
+    public void setSpecialSkillCooldown(int cooldown) {
+        specialSkillCooldown = cooldown;
     }
-
-    public void startSpecialSkillCooldown() {
-        specialSkillCooldown = 3;
-    }
-
-    public void reduceSpecialSkillCooldown() {
-        if (specialSkillCooldown > 0) {
-            specialSkillCooldown--;
-        }
-    }
-
-    public abstract String getSpecialSkillName();
 }
