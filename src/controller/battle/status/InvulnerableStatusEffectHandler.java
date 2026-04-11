@@ -12,7 +12,7 @@ public class InvulnerableStatusEffectHandler implements StatusEffectHandler {
     }
 
     @Override
-    public void handleTurnEnd(Combatant entity, Status status, BattleDisplay view) {
+    public void updateRoundStatus(Combatant entity, Status status, BattleDisplay view) {
         status.decrementDuration();
 
         if (status.isExpired()) {
