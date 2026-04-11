@@ -12,7 +12,6 @@ SC2002-TBCA/
 │   ├── model/              # Data models (characters, items, levels, etc.)
 │   ├── view/               # User interface and input handling
 │   └── App.java            # Entry point of the application
-├── bin/                    # Compiled .class files (generated after build)
 └── README.md               # Project documentation
 ```
 
