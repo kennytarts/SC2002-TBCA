@@ -84,11 +84,14 @@ public class GameView {
     }
 
     public void showRoundSummary(Player player, ArrayList<Combatant> enemies) {
+        String specialSkillCD = player.getSpecialSkillCooldown() > 0 ? 
+            "Cooldown: " + player.getSpecialSkillCooldown() + " turn(s) left" :
+            "Available"; 
         System.out.println("\nRound Summary");
         System.out.println(player.getName() + " HP: " + player.getHp()
                 + " | Status: " + formatStatuses(player)
                 + " | Items: " + formatItems(player)
-                + " | Skill Cooldown: " + player.getSpecialSkillCooldown());
+                + " | Special Skill " + specialSkillCD);
 
         for (Combatant enemy : enemies) {
             String state = enemy.isAlive() ? "Alive" : "Eliminated";
