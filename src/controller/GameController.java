@@ -183,7 +183,7 @@ public class GameController {
                 enemiesRemaining++;
             }
         }
-        gameView.showDefeat(enemiesRemaining, round);
+        gameView.showDefeat(enemiesRemaining, round, player);
     }
 
     private int handlePostGame() {
