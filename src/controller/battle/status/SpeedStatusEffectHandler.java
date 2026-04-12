@@ -17,7 +17,6 @@ public class SpeedStatusEffectHandler implements StatusEffectHandler {
         if (status.isExpired()) {
             entity.changeSpeed(-15);
             entity.removeStatus(StatusEffects.SPEED);
-            // view.showDefendWoreOff(entity);
         }
     }
 }
