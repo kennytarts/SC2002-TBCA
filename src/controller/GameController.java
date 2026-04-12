@@ -65,8 +65,8 @@ public class GameController {
             return false;
         }
 
-        mainEnemies.addAll(selectedLevel.createInitialEnemies(levelResolver.getEnemyResolver()));
-        backupEnemies.addAll(selectedLevel.createBackupEnemies(levelResolver.getEnemyResolver()));
+        mainEnemies.addAll(selectedLevel.createInitialEnemies());
+        backupEnemies.addAll(selectedLevel.createBackupEnemies());
         return true;
     }
 
@@ -183,7 +183,7 @@ public class GameController {
                 enemiesRemaining++;
             }
         }
-        gameView.showDefeat(enemiesRemaining, round);
+        gameView.showDefeat(enemiesRemaining, round, player);
     }
 
     private int handlePostGame() {

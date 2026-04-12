@@ -84,11 +84,14 @@ public class GameView {
     }
 
     public void showRoundSummary(Player player, ArrayList<Combatant> enemies) {
+        String specialSkillCD = player.getSpecialSkillCooldown() > 0 ? 
+            "Cooldown: " + player.getSpecialSkillCooldown() + " turn(s) left" :
+            "Available"; 
         System.out.println("\nRound Summary");
         System.out.println(player.getName() + " HP: " + player.getHp()
                 + " | Status: " + formatStatuses(player)
                 + " | Items: " + formatItems(player)
-                + " | Skill Cooldown: " + player.getSpecialSkillCooldown());
+                + " | Special Skill " + specialSkillCD);
 
         for (Combatant enemy : enemies) {
             String state = enemy.isAlive() ? "Alive" : "Eliminated";
@@ -105,11 +108,13 @@ public class GameView {
     public void showVictory(Player player, int totalRounds) {
         System.out.println("\nCongratulations, you have defeated all your enemies.");
         System.out.println("Remaining HP: " + player.getHp() + " | Total Rounds: " + totalRounds);
+        System.out.println("Unused Items: " + formatItems(player));
     }
 
-    public void showDefeat(int enemiesRemaining, int roundsSurvived) {
+    public void showDefeat(int enemiesRemaining, int roundsSurvived, Player player) {
         System.out.println("\nDefeated. Don't give up, try again!");
         System.out.println("Enemies remaining: " + enemiesRemaining + " | Total Rounds Survived: " + roundsSurvived);
+        System.out.println("Unused Items: " + formatItems(player));
     }
 
     public int choosePostGameOption() {
